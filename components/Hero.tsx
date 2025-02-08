@@ -9,7 +9,7 @@ import { ArrowRight } from "lucide-react"
 
 export default function Hero() {
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-black to-gray-900 flex flex-col items-center justify-center text-center px-4 py-16">
+    <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-black to-black flex flex-col items-center justify-center text-center px-4 py-16">
       {/* Animated background */}
       <motion.div
         className="absolute inset-0 opacity-30"
@@ -106,4 +106,3 @@ export default function Hero() {
     </div>
   )
 }
-
