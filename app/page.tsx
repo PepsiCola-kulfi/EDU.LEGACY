@@ -9,8 +9,8 @@ import Navbar from "../components/Navbar"; // Import Navbar
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-white antialiased">
-      <Navbar />
+  <div className="min-h-screen bg-black">
+     <Navbar />
       <main>
         <Hero />
         {/* <Partners /> */}
@@ -20,6 +20,6 @@ export default function Home() {
         <FAQ />
       </main>
       <Footer />
-    </div>
+      </div >
   );
 }

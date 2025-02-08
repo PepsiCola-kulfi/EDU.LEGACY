@@ -1,6 +1,5 @@
 import localFont from "next/font/local";
-import Navbar from "../components/Navbar";
-
+import { ThemeProvider } from 'next-themes'
 import "./globals.css";
 import { SmartWillProvider } from "@/context/SmartWillContext";
 
@@ -22,14 +21,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
     <SmartWillProvider>
-    <body className="min-h-screen bg-background font-sans antialiased">
-        <Navbar />
-        <main className="pt-16">{children}</main>
-      </body>
+      <html lang="en" >
+        <body className={`${geistSans.variable} ${geistMono.variable}`}>
+         
+          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+            {children}
+          </ThemeProvider>
+        </body>
+      </html>
     </SmartWillProvider>
-    
-    </html>
   );
 }
