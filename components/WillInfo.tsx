@@ -130,7 +130,7 @@ export default function WillInfo() {
 
           {/* Right Column - Terminal */}
           <div className="w-full">
-            <Terminal className="w-full text-left">
+            <Terminal className="w-full text-left scroll-my-0">
               <div className="space-y-2">
                 <TypingAnimation className="block">&gt; Create Your Will</TypingAnimation>
 
