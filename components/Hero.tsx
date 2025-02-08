@@ -36,7 +36,7 @@ export default function Hero() {
             whileTap={{ scale: 0.95 }}
           >
             <AnimatedShinyText className="inline-flex items-center justify-center px-6 py-2 transition ease-out">
-              <span className="font-semibold">✨ Introducing Magic UI</span>
+              <span className="font-semibold">✨ Secure legacy planning</span>
               <ArrowRightIcon className="ml-2 size-4 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
             </AnimatedShinyText>
           </motion.div>
