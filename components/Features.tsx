@@ -7,12 +7,12 @@
 // const features = [
 //   {
 //     title: "Fast Transactions",
-//     description: "Execute wills and distribute assets with Telos' lightning-fast 0.5 second block time.",
+//     description: "Execute wills and distribute assets with EDU' lightning-fast 0.5 second block time.",
 //     icon: Clock,
 //   },
 //   {
 //     title: "Low-Cost Operations",
-//     description: "Benefit from Telos' minimal transaction fees for cost-effective legacy management.",
+//     description: "Benefit from EDU' minimal transaction fees for cost-effective legacy management.",
 //     icon: DollarSign,
 //   },
 //   {
@@ -22,7 +22,7 @@
 //   },
 //   {
 //     title: "Eco-Friendly",
-//     description: "Rest easy knowing your digital legacy has a minimal environmental impact on Telos.",
+//     description: "Rest easy knowing your digital legacy has a minimal environmental impact on EDU.",
 //     icon: Leaf,
 //   },
 // ]
@@ -184,14 +184,14 @@ const SkeletonFive = () => (
 const items = [
   {
     title: "Fast Transactions",
-    description: "Execute wills and distribute assets with Telos' lightning-fast 0.5 second block time.",
+    description: "Execute wills and distribute assets with EDU' lightning-fast 0.5 second block time.",
     header: <SkeletonOne />,
     className: "md:col-span-1",
     icon: <HelpCircle className="h-5 w-5 text-neutral-600 dark:text-neutral-300" />,
   },
   {
     title: "Low-Cost Operations",
-    description:   "Benefit from Telos' minimal transaction fees for cost-effective legacy management.",
+    description:   "Benefit from EDU' minimal transaction fees for cost-effective legacy management.",
     header: <SkeletonTwo />,
     className: "md:col-span-1 p-6",
     icon: <BookOpen className="h-5 w-5 text-neutral-600 dark:text-neutral-300" />,
@@ -205,7 +205,7 @@ const items = [
   },
   {
     title: "Eco-Friendly",
-    description: "Rest easy knowing your digital legacy has a minimal environmental impact on Telos.",
+    description: "Rest easy knowing your digital legacy has a minimal environmental impact on EDU.",
     header: <SkeletonFour />,
     className: "md:col-span-2 p-6",
     icon: <FileSearch className="h-5 w-5 text-neutral-600 dark:text-neutral-300" />,

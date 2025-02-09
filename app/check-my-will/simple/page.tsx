@@ -1,21 +1,23 @@
 "use client"
 
 import type React from "react"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import { useSmartWill } from "@/context/SmartWillContext"
-import { Loader2, PlusCircle, Clock, Wallet, AlertCircle, User, FileText, Calendar, Coins } from "lucide-react"
+import { Loader2, PlusCircle, Clock, Wallet, AlertCircle, User, FileText, Calendar, Coins, Shield, History } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { motion, AnimatePresence } from "framer-motion"
+import { Progress } from "@/components/ui/progress"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 interface Will {
   beneficiary: string
   amount: bigint
   lastPingTime: bigint
-  tenYears: bigint
+  claimWaitTime: bigint // Changed from tenYears to match contract
   description: string
   isClaimed: boolean
   creationTime: bigint
@@ -27,11 +29,34 @@ const CheckMyWill = () => {
   const [error, setError] = useState<string | null>(null)
   const [depositAmount, setDepositAmount] = useState("")
   const [timeRemaining, setTimeRemaining] = useState("")
+  const [timeProgress, setTimeProgress] = useState(0)
   const [isDepositing, setIsDepositing] = useState(false)
   const [isPinging, setIsPinging] = useState(false)
+  const [lastPingTimeAgo, setLastPingTimeAgo] = useState("")
+  const [withdrawalAvailable, setWithdrawalAvailable] = useState(false)
 
-  const { account, connectWallet, getNormalWill, ping, depositNormalWill } = useSmartWill()
+  const { account, connectWallet, getNormalWill, ping, depositNormalWill, withdrawNormalWill } = useSmartWill()
   const router = useRouter()
+
+  const fetchWillDetails = useCallback(async () => {
+    setLoading(true)
+    try {
+      const details = await getNormalWill(account)
+      setWillDetails(details)
+      updateTimeRemaining(details.lastPingTime, details.claimWaitTime)
+      checkWithdrawalEligibility(details.creationTime)
+    } catch (err) {
+      setError("Unable to fetch will details. Please try again.")
+    } finally {
+      setLoading(false)
+    }
+  }, [account, getNormalWill])
+
+  const checkWithdrawalEligibility = (creationTime: bigint) => {
+    const oneYearInSeconds = BigInt(365 * 24 * 60 * 60)
+    const now = BigInt(Math.floor(Date.now() / 1000))
+    setWithdrawalAvailable(now >= creationTime + oneYearInSeconds)
+  }
 
   useEffect(() => {
     if (!account) {
@@ -39,27 +64,32 @@ const CheckMyWill = () => {
     } else {
       fetchWillDetails()
     }
-  }, [account, connectWallet])
+  }, [account])
 
-  const fetchWillDetails = async () => {
-    setLoading(true)
-    try {
-      const details = await getNormalWill(account)
-      setWillDetails(details)
-      updateTimeRemaining(details.lastPingTime)
-    } catch (err) {
-      setError("Error fetching will details.")
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const updateTimeRemaining = (lastPingTimestamp: bigint) => {
+  const updateTimeRemaining = useCallback((lastPingTimestamp: bigint, claimWaitTime: bigint) => {
     const updateCounter = () => {
       const now = BigInt(Math.floor(Date.now() / 1000))
       const lastPing = lastPingTimestamp
-      const timeLimit = BigInt(10 * 365 * 24 * 60 * 60) // 10 years in seconds
+      const timeLimit = claimWaitTime
       const remainingTime = lastPing + timeLimit - now
+      const totalTime = timeLimit
+      
+      // Calculate progress percentage
+      const elapsed = Number(timeLimit - remainingTime)
+      const total = Number(totalTime)
+      const progress = Math.min(100, (elapsed / total) * 100)
+      setTimeProgress(progress)
+
+      // Calculate time since last ping
+      const timeSinceLastPing = now - lastPing
+      const daysAgo = Number(timeSinceLastPing / BigInt(24 * 60 * 60))
+      setLastPingTimeAgo(
+        daysAgo === 0 
+          ? "Today" 
+          : daysAgo === 1 
+            ? "Yesterday" 
+            : `${daysAgo} days ago`
+      )
 
       if (remainingTime <= BigInt(0)) {
         setTimeRemaining("Beneficiary can claim")
@@ -73,19 +103,25 @@ const CheckMyWill = () => {
     }
 
     updateCounter()
-    const interval = setInterval(updateCounter, 1000) // Update every second
+    const interval = setInterval(updateCounter, 1000)
     return () => clearInterval(interval)
-  }
+  }, [])
 
   const handleDeposit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!depositAmount || parseFloat(depositAmount) <= 0) {
+      setError("Please enter a valid amount to deposit.")
+      return
+    }
+    
     setIsDepositing(true)
+    setError(null)
     try {
       await depositNormalWill(depositAmount)
       await fetchWillDetails()
       setDepositAmount("")
     } catch (err) {
-      setError("Error depositing funds.")
+      setError("Failed to deposit funds. Please try again.")
     } finally {
       setIsDepositing(false)
     }
@@ -93,13 +129,24 @@ const CheckMyWill = () => {
 
   const handlePing = async () => {
     setIsPinging(true)
+    setError(null)
     try {
       await ping()
       await fetchWillDetails()
     } catch (err) {
-      setError("Error pinging contract.")
+      setError("Failed to confirm activity. Please try again.")
     } finally {
       setIsPinging(false)
+    }
+  }
+
+  const handleWithdraw = async () => {
+    if (!willDetails) return
+    try {
+      await withdrawNormalWill(willDetails.amount.toString())
+      await fetchWillDetails()
+    } catch (err) {
+      setError("Failed to withdraw funds. Please try again.")
     }
   }
 
@@ -128,7 +175,7 @@ const CheckMyWill = () => {
             <CardTitle>No Will Found</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="mb-6">You haven't created a will yet.</p>
+            <p className="mb-6">Create a digital will to secure your assets for your beneficiaries.</p>
             <Button
               onClick={() => router.push("/create-will")}
               className="w-full flex items-center justify-center gap-2"
@@ -142,6 +189,17 @@ const CheckMyWill = () => {
     )
   }
 
+  const getStatusInfo = () => {
+    if (willDetails.isClaimed) return { color: "text-red-500", text: "Claimed" }
+    const now = BigInt(Math.floor(Date.now() / 1000))
+    const remainingTime = willDetails.lastPingTime + willDetails.claimWaitTime - now
+    if (remainingTime <= BigInt(0)) return { color: "text-red-500", text: "Claimable" }
+    if (remainingTime <= willDetails.claimWaitTime / BigInt(10)) return { color: "text-yellow-500", text: "Action Needed" }
+    return { color: "text-green-500", text: "Active" }
+  }
+
+  const status = getStatusInfo()
+
   return (
     <div className="container mx-auto px-4 py-8">
       <AnimatePresence>
@@ -153,66 +211,117 @@ const CheckMyWill = () => {
         >
           <Card className="max-w-4xl mx-auto overflow-hidden">
             <CardHeader className="bg-primary text-primary-foreground">
-              <CardTitle className="text-3xl font-bold">Your Digital Will</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-3xl font-bold">Digital Will Dashboard</CardTitle>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <div className={`flex items-center gap-2 ${status.color}`}>
+                        <Shield className="w-6 h-6" />
+                        <span className="text-sm font-semibold">{status.text}</span>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Last activity: {lastPingTimeAgo}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
             </CardHeader>
             <CardContent className="p-6 space-y-8">
               <div className="grid md:grid-cols-2 gap-6">
                 <InfoCard icon={User} title="Beneficiary" content={willDetails.beneficiary} />
                 <InfoCard
                   icon={Coins}
-                  title="Amount Deposited"
-                  content={`${Number(willDetails.amount) / 1e18} TELOS`}
+                  title="Amount Secured"
+                  content={`${Number(willDetails.amount) / 1e18} EDU`}
                 />
                 <InfoCard
                   icon={Calendar}
-                  title="Created Time"
-                  content={new Date(Number(willDetails.creationTime) * 1000).toLocaleString()}
+                  title="Created On"
+                  content={new Date(Number(willDetails.creationTime) * 1000).toLocaleDateString(undefined, {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
                 />
-                <InfoCard icon={Clock} title="Time Until Claim" content={timeRemaining} highlight />
                 <InfoCard
-                  icon={Clock}
-                  title="Last Pinged Time"
-                  content={new Date(Number(willDetails.lastPingTime) * 1000).toLocaleString()}
+                  icon={History}
+                  title="Last Activity"
+                  content={`${lastPingTimeAgo} (${new Date(Number(willDetails.lastPingTime) * 1000).toLocaleString()})`}
                 />
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="font-semibold flex items-center gap-2">
+                  <Clock className="w-5 h-5" />
+                  Time Until Claim
+                </h3>
+                <div className="bg-secondary p-4 rounded-lg">
+                  <p className="text-4xl font-mono mb-2">{timeRemaining}</p>
+                  <Progress value={timeProgress} className="h-2" />
+                </div>
               </div>
 
               <div className="bg-secondary rounded-lg p-4">
                 <h3 className="font-semibold mb-2 flex items-center gap-2">
                   <FileText className="w-5 h-5" />
-                  Description
+                  Will Description
                 </h3>
                 <p className="text-sm">{willDetails.description}</p>
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
-                <form onSubmit={handleDeposit} className="space-y-2">
-                  <div className="flex gap-2">
-                    <Input
-                      type="number"
-                      placeholder="Amount in TELOS"
-                      value={depositAmount}
-                      onChange={(e) => setDepositAmount(e.target.value)}
-                      className="flex-grow"
-                    />
-                    <Button type="submit" disabled={isDepositing || !depositAmount} className="whitespace-nowrap">
-                      {isDepositing ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <>
-                          <Wallet className="w-4 h-4 mr-2" />
-                          Deposit More
-                        </>
-                      )}
+                <div className="space-y-4">
+                  <form onSubmit={handleDeposit} className="space-y-2">
+                    <div className="flex gap-2">
+                      <Input
+                        type="number"
+                        step="0.000000000000000001"
+                        min="0"
+                        placeholder="Amount in EDU"
+                        value={depositAmount}
+                        onChange={(e) => setDepositAmount(e.target.value)}
+                        className="flex-grow"
+                      />
+                      <Button 
+                        type="submit" 
+                        disabled={isDepositing || !depositAmount || parseFloat(depositAmount) <= 0} 
+                        className="whitespace-nowrap"
+                      >
+                        {isDepositing ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <>
+                            <Wallet className="w-4 h-4 mr-2" />
+                            Add Funds
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </form>
+                  {withdrawalAvailable && (
+                    <Button 
+                      onClick={handleWithdraw} 
+                      variant="outline" 
+                      className="w-full"
+                    >
+                      Withdraw Funds
                     </Button>
-                  </div>
-                </form>
-                <Button onClick={handlePing} disabled={isPinging} variant="secondary" className="w-full h-full">
+                  )}
+                </div>
+                <Button 
+                  onClick={handlePing} 
+                  disabled={isPinging || willDetails.isClaimed} 
+                  variant="secondary" 
+                  className="w-full h-full"
+                >
                   {isPinging ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
                     <>
                       <Clock className="w-4 h-4 mr-2" />
-                      Ping Contract
+                      Confirm Activity
                     </>
                   )}
                 </Button>
@@ -225,13 +334,13 @@ const CheckMyWill = () => {
   )
 }
 
-const InfoCard = ({ icon: Icon, title, content, highlight = false }) => (
+const InfoCard = ({ icon: Icon, title, content, highlight = false, className = "" }) => (
   <div className={`p-4 rounded-lg ${highlight ? "bg-primary text-primary-foreground" : "bg-secondary"}`}>
     <h3 className="font-semibold mb-2 flex items-center gap-2">
       <Icon className="w-5 h-5" />
       {title}
     </h3>
-    <p className={`${highlight ? "text-4xl font-mono" : "text-sm"} break-all`}>{content}</p>
+    <p className={`${highlight ? "text-4xl font-mono" : "text-sm"} break-all ${className}`}>{content}</p>
   </div>
 )
 

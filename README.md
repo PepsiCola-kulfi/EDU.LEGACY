@@ -60,7 +60,7 @@ function getNormalWillAsBeneficiary(address _beneficiary) external view returns 
 ```mermaid
 graph TD
     A[User Creates Will] --> B{Normal or Milestone?}
-    B -->|Normal| C[Lock TELOS with Beneficiary]
+    B -->|Normal| C[Lock EDU with Beneficiary]
     B -->|Milestone| D[Configure Release Schedule]
     C --> E[Ping System Every 10 Years]
     D --> F[Automatic Time-Based Releases]
@@ -90,7 +90,7 @@ graph TD
 - **Reset Activity Timer**
 
 ## Future Enhancements 🌍
-- **Cross-Chain Support**: Expanding Inherify beyond Telos
+- **Cross-Chain Support**: Expanding Inherify beyond Open Campus
 - **NFT Deposits**: Secure digital collectibles alongside crypto assets
 - **Improved Block Explorer**: Enhanced transparency via AURA++
 

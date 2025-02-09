@@ -1,6 +1,6 @@
 const CONTRACT_METADATA={
 	"compiler": {
-		"version": "0.8.26+commit.8a97fa7a"
+		"version": "0.8.28+commit.7893614a"
 	},
 	"language": "Solidity",
 	"output": {
@@ -180,6 +180,12 @@ const CONTRACT_METADATA={
 						"internalType": "string",
 						"name": "description",
 						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "claimWaitTime",
+						"type": "uint256"
 					}
 				],
 				"name": "WillCreated",
@@ -279,6 +285,11 @@ const CONTRACT_METADATA={
 						"internalType": "string",
 						"name": "_description",
 						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_claimWaitTime",
+						"type": "uint256"
 					}
 				],
 				"name": "createNormalWill",
@@ -431,6 +442,11 @@ const CONTRACT_METADATA={
 					},
 					{
 						"internalType": "uint256",
+						"name": "claimWaitTime",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
 						"name": "creationTime",
 						"type": "uint256"
 					},
@@ -536,19 +552,19 @@ const CONTRACT_METADATA={
 	},
 	"sources": {
 		"@openzeppelin/contracts/token/ERC20/IERC20.sol": {
-			"keccak256": "0xc6a8ff0ea489379b61faa647490411b80102578440ab9d84e9a957cc12164e70",
+			"keccak256": "0xe06a3f08a987af6ad2e1c1e774405d4fe08f1694b67517438b467cecf0da0ef7",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://0ea104e577e63faea3b69c415637e99e755dcbf64c5833d7140c35a714d6d90c",
-				"dweb:/ipfs/Qmau6x4Ns9XdyynRCNNp3RhLqijJjFm7z5fyZazfYFGYdq"
+				"bzz-raw://df6f0c459663c9858b6cba2cda1d14a7d05a985bed6d2de72bd8e78c25ee79db",
+				"dweb:/ipfs/QmeTTxZ7qVk9rjEv2R4CpCwdf8UMCcRqDNMvzNxHc3Fnn9"
 			]
 		},
 		"contracts/WillManager.sol": {
-			"keccak256": "0x810ca9395b9ecc7bb033ad565638dfa31ef013603b31d4f568607e23acf85fa1",
+			"keccak256": "0x7c1660a558549bd12548a5599854c94fccc24c3bb7fc5848d214d6cf88c5edb5",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://3d9600f82ed15f9e0c740ba87200f88bda2b92e4007b67cf8469e8af56ced66d",
-				"dweb:/ipfs/QmWyVk1EykinjWPReripbR5H3vSL74mVHBeuxGYGBg5gQQ"
+				"bzz-raw://2c7af700f5a01d23f70034bc38a4147cbc565566ababd38bca45e5970079aa4d",
+				"dweb:/ipfs/QmSyzL68m5KXLm599Y5KY9sYYiKsvq7yJrzy949WSHighb"
 			]
 		}
 	},

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { isAddress } from "ethers"
 import { useSmartWill } from "@/context/SmartWillContext"
 import { Input } from "@/components/ui/input"
@@ -8,9 +8,16 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
-import { Users, ScrollText, Coins, AlertCircle, Info, Shield, Key } from "lucide-react"
+import { ScrollText, AlertCircle, Info, Clock, GraduationCap, BookOpen, Loader2, Wallet } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog"
 import { Checkbox } from "@/components/ui/checkbox"
 
 export default function CreateSimpleWill() {
@@ -18,6 +25,7 @@ export default function CreateSimpleWill() {
     beneficiary: "",
     assets: "",
     amount: "",
+    claimWaitTime: "",
   })
   const [validationError, setValidationError] = useState("")
   const [openDialog, setOpenDialog] = useState(false)
@@ -32,13 +40,69 @@ export default function CreateSimpleWill() {
     acceptRisks: false
   })
 
-  const { account, connectWallet, createNormalWill, loading, error, isConnected } = useSmartWill()
+  const { 
+    account, 
+    balance,
+    connectWallet, 
+    createNormalWill, 
+    loading, 
+    error, 
+    isConnected 
+  } = useSmartWill()
 
   useEffect(() => {
     if (!isConnected) {
       connectWallet()
     }
-  }, [isConnected])
+  }, [isConnected, connectWallet])
+
+  // Loading Card Component
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardContent className="pt-6">
+            <div className="flex flex-col items-center space-y-4">
+              <Loader2 className="h-10 w-10 animate-spin text-primary stroke-[3px]" /> {/* Increased size and stroke for visual impact */}
+              <p className="text-lg font-medium text-center">
+                Switching your network to EDU Chain Testnet and connecting EDU Legacy with it. Please accept the connection request in your wallet.
+              </p>
+              <p className="text-sm text-muted-foreground text-center">
+                This process may take a few seconds. Please be patient.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  // Wallet Info Component
+  const WalletInfo = () => {
+    if (!account) return null
+    
+    return (
+      <Card className="mb-8">
+        <CardContent className="pt-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <Wallet className="h-5 w-5 text-primary" />
+              <div>
+                <p className="text-sm text-muted-foreground">Connected Wallet</p>
+                <p className="font-medium">
+                  {account.slice(0, 6)}...{account.slice(-4)}
+                </p>
+              </div>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Balance</p>
+              <p className="font-medium">{Number(balance).toFixed(4)} EDU</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
 
   const validateForm = () => {
     if (formData.assets.length < 50) {
@@ -53,6 +117,12 @@ export default function CreateSimpleWill() {
       setValidationError("Invalid beneficiary address")
       return false
     }
+
+    if (!formData.claimWaitTime || Number.parseInt(formData.claimWaitTime) < 60) {
+      setValidationError("Claim wait time must be at least 60 seconds")
+      return false
+    }
+
     if (!Object.values(confirmationChecks).every(Boolean)) {
       setValidationError("Please confirm all conditions before proceeding")
       return false
@@ -70,9 +140,15 @@ export default function CreateSimpleWill() {
     if (!validateForm()) return
 
     try {
-      const success = await createNormalWill(formData.beneficiary, formData.assets, formData.amount)
+      const success = await createNormalWill(
+        formData.beneficiary,
+        formData.assets,
+        formData.amount,
+        formData.claimWaitTime
+      )
+      
       if (success) {
-        setFormData({ beneficiary: "", assets: "", amount: "" })
+        setFormData({ beneficiary: "", assets: "", amount: "", claimWaitTime: "" })
         setOpenDialog(false)
         setConfirmationChecks(Object.keys(confirmationChecks).reduce((acc, key) => ({...acc, [key]: false}), {}))
       }
@@ -99,7 +175,7 @@ export default function CreateSimpleWill() {
           onCheckedChange={() => handleCheckboxChange("termsAccepted")}
         />
         <Label htmlFor="termsAccepted" className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-          I accept the terms and conditions of the Smart Will service
+          I accept the terms and conditions of the Educational Smart Will service
         </Label>
       </div>
 
@@ -110,7 +186,7 @@ export default function CreateSimpleWill() {
           onCheckedChange={() => handleCheckboxChange("understandInactivity")}
         />
         <Label htmlFor="understandInactivity" className="text-sm leading-none">
-          I understand that my beneficiary can only claim after 10 years of account inactivity
+          I understand that my academic beneficiary can only claim after 10 years of account inactivity
         </Label>
       </div>
 
@@ -121,7 +197,7 @@ export default function CreateSimpleWill() {
           onCheckedChange={() => handleCheckboxChange("understandFees")}
         />
         <Label htmlFor="understandFees" className="text-sm leading-none">
-          I understand that a 2% service fee will be applied to the deposited amount
+          I understand that a 2% service fee in EDU tokens will support the Open Campus ecosystem
         </Label>
       </div>
 
@@ -132,7 +208,7 @@ export default function CreateSimpleWill() {
           onCheckedChange={() => handleCheckboxChange("confirmBeneficiary")}
         />
         <Label htmlFor="confirmBeneficiary" className="text-sm leading-none">
-          I confirm that the beneficiary address is correct and I trust this person
+          I confirm that the beneficiary address belongs to my chosen academic successor
         </Label>
       </div>
 
@@ -143,7 +219,7 @@ export default function CreateSimpleWill() {
           onCheckedChange={() => handleCheckboxChange("createBackup")}
         />
         <Label htmlFor="createBackup" className="text-sm leading-none">
-          I have created a secure backup of my wallet and private keys
+          I have securely backed up my wallet credentials and academic documentation
         </Label>
       </div>
 
@@ -154,7 +230,7 @@ export default function CreateSimpleWill() {
           onCheckedChange={() => handleCheckboxChange("allowDistribution")}
         />
         <Label htmlFor="allowDistribution" className="text-sm leading-none">
-          If unclaimed within 1 year of eligibility, I allow distribution to other will creators
+          If unclaimed, I allow distribution to the Open Campus scholarship fund
         </Label>
       </div>
 
@@ -165,7 +241,7 @@ export default function CreateSimpleWill() {
           onCheckedChange={() => handleCheckboxChange("understandLock")}
         />
         <Label htmlFor="understandLock" className="text-sm leading-none">
-          I understand that funds will be locked for minimum 1 year after creation
+          I understand that academic assets will be locked for minimum 1 year after creation
         </Label>
       </div>
 
@@ -176,14 +252,16 @@ export default function CreateSimpleWill() {
           onCheckedChange={() => handleCheckboxChange("acceptRisks")}
         />
         <Label htmlFor="acceptRisks" className="text-sm leading-none">
-          I understand and accept all risks associated with smart contract interactions
+          I understand and accept all risks associated with blockchain-based academic asset transfer
         </Label>
       </div>
     </div>
   )
 
   return (
-    <div className="max-w-3xl mx-auto space-y-8">
+    <div className="max-w-3xl mx-auto space-y-8 py-8">
+      <WalletInfo />
+      
       {(error || validationError) && (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
@@ -193,9 +271,9 @@ export default function CreateSimpleWill() {
 
       <Card className="border-primary/20 bg-card/60 backdrop-blur-xl shadow-lg">
         <CardHeader>
-          <CardTitle className="text-3xl font-display text-center text-primary">Create Your Digital Will</CardTitle>
+          <CardTitle className="text-3xl font-display text-center text-primary">Create Your Academic Legacy</CardTitle>
           <CardDescription className="text-center text-muted-foreground">
-            Secure your digital legacy with our Smart Will service
+            Secure your educational assets and intellectual property on Open Campus
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -203,7 +281,7 @@ export default function CreateSimpleWill() {
             <div className="space-y-4">
               <div className="relative">
                 <Label htmlFor="beneficiary" className="text-lg text-foreground flex items-center gap-2">
-                  <Users className="w-4 h-4" /> Beneficiary Address
+                  <GraduationCap className="w-4 h-4" /> Academic Beneficiary Address
                 </Label>
                 <Input
                   type="text"
@@ -219,7 +297,7 @@ export default function CreateSimpleWill() {
 
               <div className="relative">
                 <Label htmlFor="amount" className="text-lg text-foreground flex items-center gap-2">
-                  <Coins className="w-4 h-4" /> Initial Deposit (TLOS)
+                  <BookOpen className="w-4 h-4" /> Initial EDU Token Deposit
                 </Label>
                 <Input
                   type="number"
@@ -228,7 +306,7 @@ export default function CreateSimpleWill() {
                   value={formData.amount}
                   onChange={handleChange}
                   className="bg-input border-input text-foreground focus:ring-2 focus:ring-ring focus:border-ring placeholder:text-muted-foreground mt-2"
-                  placeholder="0.1"
+                  placeholder="100"
                   step="0.000001"
                   min="0"
                   required
@@ -236,14 +314,14 @@ export default function CreateSimpleWill() {
                 {formData.amount && (
                   <div className="mt-2 text-sm text-muted-foreground flex items-center gap-2">
                     <Info className="w-4 h-4" />
-                    Actual deposit: {(Number(formData.amount) * 0.98).toFixed(6)} TLOS (after 2% fee)
+                    Final deposit: {(Number(formData.amount) * 0.98).toFixed(6)} EDU (2% supports Open Campus)
                   </div>
                 )}
               </div>
 
               <div className="relative">
                 <Label htmlFor="assets" className="text-lg text-foreground flex items-center gap-2">
-                  <ScrollText className="w-4 h-4" /> Assets Description
+                  <ScrollText className="w-4 h-4" /> Academic Assets Description
                 </Label>
                 <Textarea
                   id="assets"
@@ -251,10 +329,31 @@ export default function CreateSimpleWill() {
                   value={formData.assets}
                   onChange={handleChange}
                   className="bg-input border-input text-foreground focus:ring-2 focus:ring-ring focus:border-ring placeholder:text-muted-foreground mt-2 min-h-[120px]"
-                  placeholder="Describe your digital assets (minimum 50 characters)..."
+                  placeholder="Describe your academic assets (research papers, intellectual property, educational resources)..."
                   required
                 />
                 <div className="mt-1 text-sm text-muted-foreground">{formData.assets.length}/50 characters</div>
+              </div>
+
+              <div className="relative">
+                <Label htmlFor="claimWaitTime" className="text-lg text-foreground flex items-center gap-2">
+                  <Clock className="w-4 h-4" /> Claim Wait Time (seconds)
+                </Label>
+                <Input
+                  type="number"
+                  id="claimWaitTime"
+                  name="claimWaitTime"
+                  value={formData.claimWaitTime}
+                  onChange={handleChange}
+                  className="bg-input border-input text-foreground focus:ring-2 focus:ring-ring focus:border-ring placeholder:text-muted-foreground mt-2"
+                  placeholder="60"
+                  min="60"
+                  required
+                />
+                <div className="mt-2 text-sm text-muted-foreground flex items-center gap-2">
+                  <Info className="w-4 h-4" />
+                  Minimum wait time: 60 seconds
+                </div>
               </div>
             </div>
 
@@ -264,13 +363,13 @@ export default function CreateSimpleWill() {
                   type="button"
                   className="w-full bg-primary text-primary-foreground border border-primary/30 rounded-xl px-6 py-6"
                 >
-                  Review and Confirm
+                  Review Academic Will
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-w-2xl">
-                <DialogTitle>Confirm Will Creation</DialogTitle>
+                <DialogTitle>Confirm Academic Will Creation</DialogTitle>
                 <DialogDescription>
-                  Please carefully review and confirm the following conditions
+                  Please review the following conditions for your educational legacy
                 </DialogDescription>
 
                 <ConfirmationCheckboxes />
@@ -289,7 +388,7 @@ export default function CreateSimpleWill() {
                     disabled={loading || !Object.values(confirmationChecks).every(Boolean)}
                     className="bg-primary text-primary-foreground"
                   >
-                    {loading ? "Creating..." : "Create Will"}
+                    {loading ? "Creating..." : "Secure Academic Legacy"}
                   </Button>
                 </DialogFooter>
               </DialogContent>

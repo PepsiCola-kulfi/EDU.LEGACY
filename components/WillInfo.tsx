@@ -7,15 +7,15 @@
 // const steps = [
 //   {
 //     title: "Create Your Will",
-//     description: "Set up your digital will on Telos blockchain, specifying beneficiaries and asset distribution.",
+//     description: "Set up your digital will on EDU blockchain, specifying beneficiaries and asset distribution.",
 //   },
 //   {
 //     title: "Define Conditions",
 //     description: "Establish time-based or event-triggered conditions for asset release using smart contracts.",
 //   },
 //   {
-//     title: "Secure with Telos",
-//     description: "Your will is securely stored and executed on the fast and eco-friendly Telos blockchain.",
+//     title: "Secure with EDU",
+//     description: "Your will is securely stored and executed on the fast and eco-friendly EDU blockchain.",
 //   },
 //   {
 //     title: "Easy Management",
@@ -32,11 +32,11 @@
 //             <h2 className="text-4xl font-display mb-6">
 //               Creating Your Will
 //               <br />
-//               on Telos Blockchain
+//               on Open  Blockchain
 //             </h2>
 //             <p className="text-gray-400 mb-8">
-//               Secure your legacy with ease using our Telos-powered digital will platform. Our smart contract technology
-//               ensures your wishes are executed exactly as you intend, with the speed and efficiency of Telos blockchain.
+//               Secure your legacy with ease using our EDU-powered digital will platform. Our smart contract technology
+//               ensures your wishes are executed exactly as you intend, with the speed and efficiency of EDU blockchain.
 //             </p>
 //             <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-full text-sm transition-colors">
 //               Start Your Will
@@ -84,7 +84,7 @@ const steps = [
   {
     title: "Create Your Will",
     description:
-      "Set up your digital will on Telos blockchain, specifying beneficiaries and asset distribution.",
+      "Set up your digital will on Open Campus blockchain, specifying beneficiaries and asset distribution.",
   },
   {
     title: "Define Conditions",
@@ -92,9 +92,9 @@ const steps = [
       "Establish time-based or event-triggered conditions for asset release using smart contracts.",
   },
   {
-    title: "Secure with Telos",
+    title: "Secure with EDU",
     description:
-      "Your will is securely stored and executed on the fast and eco-friendly Telos blockchain.",
+      "Your will is securely stored and executed on the fast and eco-friendly Open Campus blockchain.",
   },
   {
     title: "Easy Management",
@@ -116,12 +116,12 @@ export default function WillInfo() {
             className="text-center md:text-left"
           >
             <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-400">
-              Creating Your <br /> Will  on <br />Telos Blockchain
+              Creating Your <br /> Will  on <br />EDU Blockchain
             </h2>
             <p className="text-gray-400 mb-8">
-              Secure your legacy with ease using our Telos-powered digital will platform.
+              Secure your legacy with ease using our EDU-powered digital will platform.
               Our smart contract technology ensures your wishes are executed exactly as you
-              intend, with the speed and efficiency of Telos blockchain.
+              intend, with the speed and efficiency of EDU blockchain.
             </p>
             <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-full text-sm transition-colors">
               Start Your Will
@@ -130,7 +130,7 @@ export default function WillInfo() {
 
           {/* Right Column - Terminal */}
           <div className="w-full">
-            <Terminal className="w-full text-left scroll-my-0">
+            <Terminal className="w-full text-left scroll-my-0 font-robotoMono">
               <div className="space-y-2">
                 <TypingAnimation className="block">&gt; Create Your Will</TypingAnimation>
 

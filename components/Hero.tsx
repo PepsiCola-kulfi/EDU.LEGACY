@@ -6,6 +6,8 @@ import { AnimatedShinyText } from "@/components/magicui/animated-shiny-text"
 import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
 import { ArrowRight } from "lucide-react"
+import { InfoCircledIcon } from "@radix-ui/react-icons"; // Import the info icon
+import Link from "next/link"
 
 export default function Hero() {
   return (
@@ -51,19 +53,31 @@ export default function Hero() {
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-400">
             Secure Your Legacy
             <br />
-            On Telos Blockchain
+            On Open Campus Blockchain
           </span>
         </motion.h1>
 
         <motion.p
-          className="text-lg sm:text-xl text-gray-300 mb-10 max-w-2xl mx-auto"
+          className="text-lg sm:text-xl text-gray-300 mb-4 max-w-2xl mx-auto"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.8 }}
         >
-          Create smart wills, set milestone-based distributions, and ensure your legacy lives on through Telos
+          Create smart wills, set milestone-based distributions, and ensure your legacy lives on through Open Campus
           blockchain. Fast, secure, and eco-friendly.
         </motion.p>
+
+        <motion.div
+          className="flex items-center justify-center text-sm text-yellow-300 bg-yellow-900/30 rounded-md py-2 px-4 mb-8 max-w-2xl mx-auto"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.8 }}
+        >
+          <InfoCircledIcon className="mr-2 h-4 w-4" />
+          <span className="font-semibold">
+            <span className="font-bold">Currently on Testnet!</span> We're live on the Open Campus Testnet using EDU tokens.  Help us improve by participating and providing feedback!  Mainnet launch coming soon!
+          </span>
+        </motion.div>
 
         <motion.div
           className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4"
@@ -77,13 +91,14 @@ export default function Hero() {
           >
             Start Your Will
           </Button>
-          <Button
+          <Link href={"/claimables"}>  <Button
             size="lg"
             variant="outline"
             className="rounded-full px-8 py-6 text-lg font-semibold border-white/20 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 ease-in-out"
           >
-            Learn More <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
+            Check My Claimables <ArrowRight className="ml-2 h-5 w-5" />
+          </Button></Link>
+         
         </motion.div>
       </motion.div>
 
