@@ -107,7 +107,7 @@ export default function WillInfo() {
   return (
     <section className="py-20 relative">
       <div className="container mx-auto px-5">
-        <div className="grid md:grid-cols-2 gap-32 items-center">
+        <div className="grid md:grid-cols-2 gap-64 items-center">
           {/* Left Column */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -123,9 +123,6 @@ export default function WillInfo() {
               Our smart contract technology ensures your wishes are executed exactly as you
               intend, with the speed and efficiency of Telos blockchain.
             </p>
-            <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-full text-sm transition-colors">
-              Start Your Will
-            </button>
           </motion.div>
 
           {/* Right Column - Terminal */}

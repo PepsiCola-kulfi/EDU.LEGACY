@@ -5,11 +5,12 @@ import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import { useSmartWill } from "@/context/SmartWillContext"
-import { Loader2, PlusCircle, Clock, Wallet, AlertCircle, User, FileText, Calendar, Coins } from "lucide-react"
+import { Loader2, PlusCircle, Clock, Wallet, AlertCircle, User, FileText, Calendar, Coins, ArrowLeft } from "lucide-react" // Add ArrowLeft icon
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { motion, AnimatePresence } from "framer-motion"
+import { DotBackground } from "@/components/animateddots"
 
 interface Will {
   beneficiary: string
@@ -106,7 +107,7 @@ const CheckMyWill = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="w-12 h-12 animate-spin text-primary" />
+        <Loader2 className="w-12 h-12 animate-spin text-white" />
       </div>
     )
   }
@@ -122,8 +123,9 @@ const CheckMyWill = () => {
 
   if (!willDetails) {
     return (
+      <DotBackground>
       <div className="flex flex-col items-center justify-center min-h-screen p-4">
-        <Card className="w-full max-w-md text-center">
+        <Card className="w-full max-w-md text-center bg-white/20 dark:bg-black/20 backdrop-blur-md border border-white/30 dark:border-gray-600/40 rounded-lg p-4">
           <CardHeader>
             <CardTitle>No Will Found</CardTitle>
           </CardHeader>
@@ -131,7 +133,7 @@ const CheckMyWill = () => {
             <p className="mb-6">You haven't created a will yet.</p>
             <Button
               onClick={() => router.push("/create-will")}
-              className="w-full flex items-center justify-center gap-2"
+              className="w-full flex items-center justify-center gap-2  bg-white/30 dark:bg-black/30 border border-white/40 dark:border-gray-600/40 backdrop-blur-md rounded-xl p-3 dark:hover:text-black dark:text-gray-100 hover:bg-white/40 dark:hover:bg-white transition"
             >
               <PlusCircle className="w-4 h-4" />
               Create Will
@@ -139,93 +141,131 @@ const CheckMyWill = () => {
           </CardContent>
         </Card>
       </div>
+      </DotBackground>
     )
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <AnimatePresence>
+    <DotBackground>
+      <div className="h-screen flex items-center justify-center relative">
+        
+        {/* Back Button at the top-left corner */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.5 }}
+          whileHover={{ scale: 1.1 }}
+          transition={{ duration: 0.3 }}
+          className="absolute top-4 left-4 z-10"
         >
-          <Card className="max-w-4xl mx-auto overflow-hidden">
-            <CardHeader className="bg-primary text-primary-foreground">
-              <CardTitle className="text-3xl font-bold">Your Digital Will</CardTitle>
-            </CardHeader>
-            <CardContent className="p-6 space-y-8">
-              <div className="grid md:grid-cols-2 gap-6">
-                <InfoCard icon={User} title="Beneficiary" content={willDetails.beneficiary} />
-                <InfoCard
-                  icon={Coins}
-                  title="Amount Deposited"
-                  content={`${Number(willDetails.amount) / 1e18} TELOS`}
-                />
-                <InfoCard
-                  icon={Calendar}
-                  title="Created Time"
-                  content={new Date(Number(willDetails.creationTime) * 1000).toLocaleString()}
-                />
-                <InfoCard icon={Clock} title="Time Until Claim" content={timeRemaining} highlight />
-                <InfoCard
-                  icon={Clock}
-                  title="Last Pinged Time"
-                  content={new Date(Number(willDetails.lastPingTime) * 1000).toLocaleString()}
-                />
-              </div>
-
-              <div className="bg-secondary rounded-lg p-4">
-                <h3 className="font-semibold mb-2 flex items-center gap-2">
-                  <FileText className="w-5 h-5" />
-                  Description
-                </h3>
-                <p className="text-sm">{willDetails.description}</p>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-4">
-                <form onSubmit={handleDeposit} className="space-y-2">
-                  <div className="flex gap-2">
-                    <Input
-                      type="number"
-                      placeholder="Amount in TELOS"
-                      value={depositAmount}
-                      onChange={(e) => setDepositAmount(e.target.value)}
-                      className="flex-grow"
-                    />
-                    <Button type="submit" disabled={isDepositing || !depositAmount} className="whitespace-nowrap">
-                      {isDepositing ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <>
-                          <Wallet className="w-4 h-4 mr-2" />
-                          Deposit More
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </form>
-                <Button onClick={handlePing} disabled={isPinging} variant="secondary" className="w-full h-full">
-                  {isPinging ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <>
-                      <Clock className="w-4 h-4 mr-2" />
-                      Ping Contract
-                    </>
-                  )}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+          <Button
+            variant="outline"
+            onClick={() => router.push("/")}  // Navigate to Home
+            className="flex items-center gap-2 text-white bg-black/30  border border-white/40 rounded-xl p-3 backdrop-blur-md hover:bg-black/40"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Home
+          </Button>
         </motion.div>
-      </AnimatePresence>
-    </div>
+
+        <AnimatePresence>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Card
+              className="max-w-4xl mx-auto overflow-hidden dark:bg-transparent backdrop-blur-[1px] border border-white/30 dark:border-gray-600/40 rounded-xl transition-transform transform"
+            >
+              <CardHeader className="bg-primary text-primary-foreground">
+                <CardTitle className="text-3xl font-bold">Your Digital Will</CardTitle>
+              </CardHeader>
+              <CardContent className="p-6 space-y-8">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <InfoCard icon={User} title="Beneficiary" content={willDetails.beneficiary} />
+                  <InfoCard
+                    icon={Coins}
+                    title="Amount Deposited"
+                    content={`${Number(willDetails.amount) / 1e18} TELOS`}
+                  />
+                  <InfoCard
+                    icon={Calendar}
+                    title="Created Time"
+                    content={new Date(Number(willDetails.creationTime) * 1000).toLocaleString()}
+                  />
+                  <InfoCard icon={Clock} title="Time Until Claim" content={timeRemaining} highlight />
+                  <InfoCard
+                    icon={Clock}
+                    title="Last Pinged Time"
+                    content={new Date(Number(willDetails.lastPingTime) * 1000).toLocaleString()}
+                  />
+                </div>
+
+                <div className="bg-secondary rounded-lg p-4">
+                  <h3 className="font-semibold mb-2 flex items-center gap-2">
+                    <FileText className="w-5 h-5" />
+                    Description
+                  </h3>
+                  <p className="text-sm">{willDetails.description}</p>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  <form onSubmit={handleDeposit} className="space-y-2">
+                    <div className="flex gap-2">
+                      <Input
+                        type="number"
+                        placeholder="Amount in TELOS"
+                        value={depositAmount}
+                        onChange={(e) => setDepositAmount(e.target.value)}
+                        className="flex-grow transition-transform transform hover:scale-105"
+                      />
+                      <Button
+                        type="submit"
+                        disabled={isDepositing || !depositAmount}
+                        className="whitespace-nowrap bg-white/30 dark:bg-black/30 border border-white/40 dark:border-gray-600/40 backdrop-blur-md rounded-lg p-3 text-white dark:text-gray-300 hover:bg-white/40 dark:hover:bg-black/40 transition-all transform hover:scale-105"
+                      >
+                        {isDepositing ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <>
+                            <Wallet className="w-4 h-4 mr-2" />
+                            Deposit More
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </form>
+                  <Button
+                    onClick={handlePing}
+                    disabled={isPinging}
+                    variant="secondary"
+                    className=" bg-white/30 dark:bg-black/30 border border-white/40 dark:border-gray-600/40 backdrop-blur-md rounded-lg p-3 text-white dark:text-gray-300 hover:bg-white/40 dark:hover:bg-black/40 transition-all transform hover:scale-105"
+                  >
+                    {isPinging ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <>
+                        <Clock className="w-4 h-4 mr-2" />
+                        Ping Contract
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    </DotBackground>
   )
 }
 
-const InfoCard = ({ icon: Icon, title, content, highlight = false }) => (
+interface InfoCardProps {
+  icon: React.ElementType; // This ensures the icon prop is a component (e.g., from `lucide-react`)
+  title: string;
+  content: string;
+  highlight?: boolean; // Optional prop
+}
+
+const InfoCard = ({ icon: Icon, title, content, highlight = false }: InfoCardProps) => (
   <div className={`p-4 rounded-lg ${highlight ? "bg-primary text-primary-foreground" : "bg-secondary"}`}>
     <h3 className="font-semibold mb-2 flex items-center gap-2">
       <Icon className="w-5 h-5" />
