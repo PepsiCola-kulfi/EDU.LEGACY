@@ -24,12 +24,12 @@ const Page = () => {
 
         <div className="w-full max-w-md text-center bg-transparent backdrop-blur-0 rounded-xl border p-6 shadow-lg">
           {hasSimpleWill ? (
-            <div className="w-full">
+            <div className="w-full bg-blue-500 " >
 
 
               <Button
                 onClick={handleRedirect}
-                className="w-full bg-white/20 dark:bg-black/20 backdrop-blur-md border border-white/30 dark:border-gray-600/40 rounded-lg p-3 text-white dark:text-gray-300 hover:bg-white/30 dark:hover:bg-black/30 transition duration-300"
+                className="w-full  bg-white/20 dark:bg-black/20 backdrop-blur-md border border-white/30 dark:border-gray-600/40 rounded-lg p-3 text-white dark:text-gray-300 hover:bg-white/30 dark:hover:bg-black/30 transition duration-300"
               >
                 Check Your Simple Will
               </Button>
