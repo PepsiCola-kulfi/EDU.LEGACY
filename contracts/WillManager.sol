@@ -8,6 +8,7 @@ contract WillManager {
         address beneficiary;
         uint256 amount;
         uint256 lastPingTime;
+        uint256 claimWaitTime; // Custom claim wait time in seconds
         uint256 creationTime;
         string description;
         bool isClaimed;
@@ -38,7 +39,7 @@ contract WillManager {
     address public platformWallet;
     uint256 public platformFeePercentage;
 
-    event WillCreated(address indexed user, address indexed beneficiary, uint256 amount, string description);
+    event WillCreated(address indexed user, address indexed beneficiary, uint256 amount, string description, uint256 claimWaitTime);
     event MilestoneWillCreated(address indexed user, uint256 totalAmount);
     event WillClaimed(address indexed beneficiary, uint256 amount);
     event MilestoneClaimed(address indexed beneficiary, uint256 amount);
@@ -58,12 +59,13 @@ contract WillManager {
         platformFeePercentage = _platformFeePercentage;
     }
 
-    function createNormalWill(address payable _beneficiary, string memory _description) external payable {
+    function createNormalWill(address payable _beneficiary, string memory _description, uint256 _claimWaitTime) external payable {
         require(!hasNormalWill[msg.sender], "Normal will already exists");
         require(_beneficiary != address(0), "Invalid beneficiary");
         require(msg.sender != _beneficiary, "Owner cannot be beneficiary");
         require(msg.value > 0, "Amount must be > 0");
         require(bytes(_description).length >= 50, "Description too short");
+        require(_claimWaitTime >= 60, "Minimum claim wait time is 60 seconds"); // At least 1 minute
 
         uint256 platformFee = (msg.value * platformFeePercentage) / 100;
         uint256 willAmount = msg.value - platformFee;
@@ -74,6 +76,7 @@ contract WillManager {
             beneficiary: _beneficiary,
             amount: willAmount,
             lastPingTime: block.timestamp,
+            claimWaitTime: _claimWaitTime,
             creationTime: block.timestamp,
             description: _description,
             isClaimed: false
@@ -82,7 +85,7 @@ contract WillManager {
         hasNormalWill[msg.sender] = true;
         _addToWillOwners(msg.sender);
 
-        emit WillCreated(msg.sender, _beneficiary, willAmount, _description);
+        emit WillCreated(msg.sender, _beneficiary, willAmount, _description, _claimWaitTime);
     }
 
     function createMilestoneWill(
@@ -123,7 +126,7 @@ contract WillManager {
         Will storage will = normalWills[_owner];
         
         require(msg.sender == will.beneficiary, "Not beneficiary");
-        require(block.timestamp >= will.lastPingTime + 10 * 365 days, "Too early");
+        require(block.timestamp >= will.lastPingTime + will.claimWaitTime, "Too early");
         require(!will.isClaimed, "Already claimed");
 
         will.isClaimed = true;

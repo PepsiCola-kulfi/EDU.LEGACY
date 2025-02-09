@@ -12,19 +12,15 @@ const faqs = [
   },
   {
     question: "What are the advantages of creating a will on EDU?",
-    question: "What are the advantages of creating a will on EDU?",
     answer:
-      "EDU offers fast transaction speeds, low costs, and eco-friendly operations. This means your will can be created, updated, and executed quickly and efficiently, with minimal environmental impact and transaction fees.",
       "EDU offers fast transaction speeds, low costs, and eco-friendly operations. This means your will can be created, updated, and executed quickly and efficiently, with minimal environmental impact and transaction fees.",
   },
   {
-    question: "Can I update my will after it's been created on EDU?",
     question: "Can I update my will after it's been created on EDU?",
     answer:
       "Yes, our platform allows you to update your will at any time. Changes are recorded on the EDU Chain, ensuring a clear audit trail while maintaining the flexibility to adapt to life changes.",
   },
   {
-    question: "How does asset distribution work with a EDU-based will?",
     question: "How does asset distribution work with a EDU-based will?",
     answer:
       "Assets are distributed according to the conditions set in your will's smart contract. This can include time-based releases, specific event triggers, or instant distribution upon verification of certain conditions.",
@@ -39,10 +35,10 @@ export default function FAQ() {
   };
 
   return (
-    <section className="py-20 relative">
+    <section className="py-20 relative bg-gray-900 text-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-display mb-4">
+          <h2 className="text-4xl font-display mb-4 text-white">
             Frequently Asked Questions
             <br />
             About EDU Wills
@@ -51,14 +47,16 @@ export default function FAQ() {
         <div className="max-w-4xl mx-auto space-y-6">
           {faqs.map((faq, index) => (
             <div key={index} className="pb-4">
-              <button
+              <motion.button
                 onClick={() => toggleFAQ(index)}
                 className="w-full flex py-4 px-6 text-lg font-normal bg-white/5 backdrop-blur-md rounded-full border border-white/10 shadow-lg transition-all duration-300 hover:bg-white/10 hover:scale-105 hover:text-white"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
                 <AnimatedShinyText>
                   <span className="truncate">{faq.question}</span>
                 </AnimatedShinyText>
-              </button>
+              </motion.button>
 
               <motion.p
                 initial={{ opacity: 0, height: 0 }}
@@ -66,8 +64,8 @@ export default function FAQ() {
                   opacity: openIndex === index ? 1 : 0,
                   height: openIndex === index ? "auto" : 0,
                 }}
-                transition={{ duration: 0.3 }}
-                className="text-gray-400 px-6 mt-2 overflow-hidden"
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="text-gray-300 px-6 mt-2 overflow-hidden"
               >
                 {faq.answer}
               </motion.p>
