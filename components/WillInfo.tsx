@@ -72,13 +72,14 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Card } from "@/components/ui/card"
-import { CheckCircle } from "lucide-react"
+
+
 import {
   AnimatedSpan,
   Terminal,
   TypingAnimation,
 } from "@/components/magicui/terminal";
+import { SparklesText } from "./magicui/sparkles-text";
 
 const steps = [
   {
@@ -92,7 +93,6 @@ const steps = [
       "Establish time-based or event-triggered conditions for asset release using smart contracts.",
   },
   {
-    title: "Secure with EDU",
     title: "Secure with EDU",
     description:
       "Your will is securely stored and executed on the fast and eco-friendly Open Campus blockchain.",
@@ -116,8 +116,8 @@ export default function WillInfo() {
             transition={{ duration: 0.5 }}
             className="text-center md:text-left"
           >
-            <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-400">
-              Creating Your <br /> Will  on <br />EDU Chain
+            <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 bg-clip-text  bg-gradient-to-r from-white via-gray-200 to-gray-400">
+              Creating Your <br /> Will  on <br /><SparklesText text="EDU Chain " className="text-gray-300" /> 
             </h2>
             <p className="text-gray-400 mb-8">
               Secure your legacy with ease using our EDU-powered digital will platform.

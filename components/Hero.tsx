@@ -9,7 +9,7 @@ import { ArrowRight, ChevronRight } from "lucide-react"
 import { InfoCircledIcon } from "@radix-ui/react-icons"; // Import the info icon
 import Link from "next/link"
 import { AnimatedGradientText } from "./magicui/animated-gradient-text"
-
+import { SparklesText } from "@/components/magicui/sparkles-text";
 export default function Hero() {
   return (
     <div className="relative min-h-screen w-full overflow-hidden from-black to-black flex flex-col items-center justify-center text-center px-4 py-28">
@@ -54,7 +54,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.8 }}
         >
-          Create smart wills, set milestone-based distributions, and ensure your legacy lives on through EDU Chain. Fast, secure, and eco-friendly.
+           Create smart wills, set milestone-based distributions, and ensure your legacy lives on through EDU Chain. Fast, secure, and eco-friendly.
         </motion.p>
 
         <motion.div
