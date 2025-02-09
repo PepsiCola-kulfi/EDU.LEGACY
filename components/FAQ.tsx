@@ -12,15 +12,19 @@ const faqs = [
   },
   {
     question: "What are the advantages of creating a will on EDU?",
+    question: "What are the advantages of creating a will on EDU?",
     answer:
+      "EDU offers fast transaction speeds, low costs, and eco-friendly operations. This means your will can be created, updated, and executed quickly and efficiently, with minimal environmental impact and transaction fees.",
       "EDU offers fast transaction speeds, low costs, and eco-friendly operations. This means your will can be created, updated, and executed quickly and efficiently, with minimal environmental impact and transaction fees.",
   },
   {
+    question: "Can I update my will after it's been created on EDU?",
     question: "Can I update my will after it's been created on EDU?",
     answer:
       "Yes, our platform allows you to update your will at any time. Changes are recorded on the EDU Chain, ensuring a clear audit trail while maintaining the flexibility to adapt to life changes.",
   },
   {
+    question: "How does asset distribution work with a EDU-based will?",
     question: "How does asset distribution work with a EDU-based will?",
     answer:
       "Assets are distributed according to the conditions set in your will's smart contract. This can include time-based releases, specific event triggers, or instant distribution upon verification of certain conditions.",

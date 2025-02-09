@@ -93,6 +93,7 @@ const steps = [
   },
   {
     title: "Secure with EDU",
+    title: "Secure with EDU",
     description:
       "Your will is securely stored and executed on the fast and eco-friendly Open Campus blockchain.",
   },
@@ -106,8 +107,8 @@ const steps = [
 export default function WillInfo() {
   return (
     <section className="py-20 relative">
-      <div className="container mx-auto px-5">
-        <div className="grid md:grid-cols-2 gap-96 ">
+      <div className="container mx-auto px-3">
+        <div className="grid md:grid-cols-2 gap-72 ">
           {/* Left Column */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -119,6 +120,7 @@ export default function WillInfo() {
               Creating Your <br /> Will  on <br />EDU Chain
             </h2>
             <p className="text-gray-400 mb-8">
+              Secure your legacy with ease using our EDU-powered digital will platform.
               Secure your legacy with ease using our EDU-powered digital will platform.
               Our smart contract technology ensures your wishes are executed exactly as you
               intend, with the speed and efficiency of EDU Chain.
