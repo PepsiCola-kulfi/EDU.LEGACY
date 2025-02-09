@@ -22,9 +22,9 @@ export default function Home() {
         {/* <ImpactSection /> */}
         <FAQ />
       </main>
-      </DotBackground>
+      
       <Footer />
-
+      </DotBackground>
       </div >
   );
 }

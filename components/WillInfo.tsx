@@ -106,8 +106,8 @@ const steps = [
 export default function WillInfo() {
   return (
     <section className="py-20 relative">
-      <div className="container mx-auto px-5">
-        <div className="grid md:grid-cols-2 gap-96 ">
+      <div className="container mx-auto px-3">
+        <div className="grid md:grid-cols-2 gap-72 ">
           {/* Left Column */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -115,8 +115,8 @@ export default function WillInfo() {
             transition={{ duration: 0.5 }}
             className="text-center md:text-left"
           >
-            <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-400">
-              Creating Your <br /> Will  on <br />Telos Blockchain
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-400">
+              Creating Your  Will  on Telos Blockchain
             </h2>
             <p className="text-gray-400 mb-8">
               Secure your legacy with ease using our Telos-powered digital will platform.
@@ -127,8 +127,8 @@ export default function WillInfo() {
 
           {/* Right Column - Terminal */}
           <div className="w-full">
-            <Terminal className="w-full text-left scroll-my-0">
-              <div className="space-y-2">
+            <Terminal className="w-full text-left ">
+              <div className="space-y-2 pb-7 overflow-hidden ">
                 <TypingAnimation className="block">&gt; Create Your Will</TypingAnimation>
 
                 <AnimatedSpan delay={1500} className="block text-green-500">
