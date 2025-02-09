@@ -90,7 +90,7 @@ export default function CreateSimpleWill() {
 
   useEffect(() => {
     checkWillStatus()  // Call the memoized function
-  }, [checkWillStatus])
+  }, [])
 
   // Handle Submit Effect
   const handleSubmit = async (e) => {
