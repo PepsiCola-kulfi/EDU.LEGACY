@@ -41,7 +41,7 @@ export default function Hero() {
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-400">
               Secure Your Legacy
               <br />
-              On Telos Blockchain
+              On EDU Blockchain
             </span>
           </motion.h1>
 
@@ -51,7 +51,7 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
           >
-            Create smart wills, set milestone-based distributions, and ensure your legacy lives on through Telos
+            Create smart wills, set milestone-based distributions, and ensure your legacy lives on through EDU
             blockchain. Fast, secure, and eco-friendly.
           </motion.p>
 

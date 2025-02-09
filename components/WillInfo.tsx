@@ -84,7 +84,7 @@ const steps = [
   {
     title: "Create Your Will",
     description:
-      "Set up your digital will on Telos blockchain, specifying beneficiaries and asset distribution.",
+      "Set up your digital will on EDU blockchain, specifying beneficiaries and asset distribution.",
   },
   {
     title: "Define Conditions",
@@ -92,9 +92,9 @@ const steps = [
       "Establish time-based or event-triggered conditions for asset release using smart contracts.",
   },
   {
-    title: "Secure with Telos",
+    title: "Secure with EDU",
     description:
-      "Your will is securely stored and executed on the fast and eco-friendly Telos blockchain.",
+      "Your will is securely stored and executed on the fast and eco-friendly EDU blockchain.",
   },
   {
     title: "Easy Management",
@@ -116,12 +116,12 @@ export default function WillInfo() {
             className="text-center md:text-left"
           >
             <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-400">
-              Creating Your  Will  on Telos Blockchain
+              Creating Your  Will  on EDU Blockchain
             </h2>
             <p className="text-gray-400 mb-8">
-              Secure your legacy with ease using our Telos-powered digital will platform.
+              Secure your legacy with ease using our EDU-powered digital will platform.
               Our smart contract technology ensures your wishes are executed exactly as you
-              intend, with the speed and efficiency of Telos blockchain.
+              intend, with the speed and efficiency of EDU blockchain.
             </p>
           </motion.div>
 
