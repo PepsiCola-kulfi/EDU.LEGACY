@@ -1,12 +1,14 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { AnimatedShinyText } from "./magicui/animated-shiny-text";
 
 const faqs = [
   {
-    question: "How does EDU blockchain ensure my will's security?",
+    question: "How does EDU Chain ensure my will's security?",
     answer:
-      "EDU blockchain provides immutable, transparent records of your will. Its high-speed performance and EVM compatibility ensure your wishes are securely stored and executed exactly as intended, with minimal risk of tampering or fraud.",
+      "EDU Chain provides immutable, transparent records of your will. Its high-speed performance and EVM compatibility ensure your wishes are securely stored and executed exactly as intended, with minimal risk of tampering or fraud.",
   },
   {
     question: "What are the advantages of creating a will on EDU?",
@@ -16,16 +18,22 @@ const faqs = [
   {
     question: "Can I update my will after it's been created on EDU?",
     answer:
-      "Yes, our platform allows you to update your will at any time. Changes are recorded on the EDU blockchain, ensuring a clear audit trail while maintaining the flexibility to adapt to life changes.",
+      "Yes, our platform allows you to update your will at any time. Changes are recorded on the EDU Chain, ensuring a clear audit trail while maintaining the flexibility to adapt to life changes.",
   },
   {
     question: "How does asset distribution work with a EDU-based will?",
     answer:
       "Assets are distributed according to the conditions set in your will's smart contract. This can include time-based releases, specific event triggers, or instant distribution upon verification of certain conditions.",
   },
-]
+];
 
 export default function FAQ() {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  const toggleFAQ = (index: number) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+
   return (
     <section className="py-20 relative">
       <div className="container mx-auto px-4">
@@ -36,21 +44,33 @@ export default function FAQ() {
             About EDU Wills
           </h2>
         </div>
-        <div className="grid md:grid-cols-2 gap-12 max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto space-y-6">
           {faqs.map((faq, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <h3 className="text-xl font-medium mb-4">{faq.question}</h3>
-              <p className="text-gray-400">{faq.answer}</p>
-            </motion.div>
+            <div key={index} className="pb-4">
+              <button
+                onClick={() => toggleFAQ(index)}
+                className="w-full flex py-4 px-6 text-lg font-normal bg-white/5 backdrop-blur-md rounded-full border border-white/10 shadow-lg transition-all duration-300 hover:bg-white/10 hover:scale-105 hover:text-white"
+              >
+                <AnimatedShinyText>
+                  <span className="truncate">{faq.question}</span>
+                </AnimatedShinyText>
+              </button>
+
+              <motion.p
+                initial={{ opacity: 0, height: 0 }}
+                animate={{
+                  opacity: openIndex === index ? 1 : 0,
+                  height: openIndex === index ? "auto" : 0,
+                }}
+                transition={{ duration: 0.3 }}
+                className="text-gray-400 px-6 mt-2 overflow-hidden"
+              >
+                {faq.answer}
+              </motion.p>
+            </div>
           ))}
         </div>
       </div>
     </section>
-  )
+  );
 }
-

@@ -7,7 +7,7 @@
 // const steps = [
 //   {
 //     title: "Create Your Will",
-//     description: "Set up your digital will on EDU blockchain, specifying beneficiaries and asset distribution.",
+//     description: "Set up your digital will on EDU Chain, specifying beneficiaries and asset distribution.",
 //   },
 //   {
 //     title: "Define Conditions",
@@ -15,7 +15,7 @@
 //   },
 //   {
 //     title: "Secure with EDU",
-//     description: "Your will is securely stored and executed on the fast and eco-friendly EDU blockchain.",
+//     description: "Your will is securely stored and executed on the fast and eco-friendly EDU Chain.",
 //   },
 //   {
 //     title: "Easy Management",
@@ -36,7 +36,7 @@
 //             </h2>
 //             <p className="text-gray-400 mb-8">
 //               Secure your legacy with ease using our EDU-powered digital will platform. Our smart contract technology
-//               ensures your wishes are executed exactly as you intend, with the speed and efficiency of EDU blockchain.
+//               ensures your wishes are executed exactly as you intend, with the speed and efficiency of EDU Chain.
 //             </p>
 //             <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-full text-sm transition-colors">
 //               Start Your Will
@@ -107,7 +107,7 @@ export default function WillInfo() {
   return (
     <section className="py-20 relative">
       <div className="container mx-auto px-5">
-        <div className="grid md:grid-cols-2 gap-32 items-center">
+        <div className="grid md:grid-cols-2 gap-96 ">
           {/* Left Column */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -116,16 +116,13 @@ export default function WillInfo() {
             className="text-center md:text-left"
           >
             <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-400">
-              Creating Your <br /> Will  on <br />EDU Blockchain
+              Creating Your <br /> Will  on <br />EDU Chain
             </h2>
             <p className="text-gray-400 mb-8">
               Secure your legacy with ease using our EDU-powered digital will platform.
               Our smart contract technology ensures your wishes are executed exactly as you
-              intend, with the speed and efficiency of EDU blockchain.
+              intend, with the speed and efficiency of EDU Chain.
             </p>
-            <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-full text-sm transition-colors">
-              Start Your Will
-            </button>
           </motion.div>
 
           {/* Right Column - Terminal */}
@@ -136,7 +133,7 @@ export default function WillInfo() {
 
                 <AnimatedSpan delay={1500} className="block text-green-500">
                   <span>
-                    ✔ Set up your digital will on EDU blockchain, specifying beneficiaries and asset distribution.
+                    ✔ Set up your digital will on EDU Chain, specifying beneficiaries and asset distribution.
                   </span>
                 </AnimatedSpan>
 
@@ -156,7 +153,7 @@ export default function WillInfo() {
 
                 <AnimatedSpan delay={3500} className="block text-green-500">
                   <span>
-                    ✔ Your will is securely stored and executed on the fast and eco-friendly EDU blockchain.
+                    ✔ Your will is securely stored and executed on the fast and eco-friendly EDU Chain.
                   </span>
                 </AnimatedSpan>
 

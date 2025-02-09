@@ -3,109 +3,122 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSmartWill } from '@/context/SmartWillContext'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { ScrollText, AlertCircle, Clock, Check, Lock, Loader2 } from 'lucide-react'
+import { ScrollText, AlertCircle, Clock, Check, Lock, Loader2, FileText, Coins, User } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
-import { ethers } from 'ethers' // Import ethers
+import { isAddress, ethers } from 'ethers'
 
 interface Claimable {
-  owner: string; // Owner is the testator in your context
-  amount: string; // Amount is the asset amount
+  owner: string;
+  amount: string;
+  description: string;
+  lastActiveTime: number;
+  claimWaitTime: number;
+  beneficiary: string;
 }
 
 export default function Claimables() {
   const router = useRouter()
-  const { account, connectWallet, loading: walletLoading, error: walletError, isConnected, getNormalWillsAsBeneficiary, claimNormalWill } = useSmartWill()
+  const {
+    account,
+    connectWallet,
+    loading: walletLoading,
+    error: walletError,
+    isConnected,
+    getNormalWillsAsBeneficiary,
+    claimNormalWill,
+    getNormalWill,
+  } = useSmartWill()
+
   const [claimables, setClaimables] = useState<Claimable[]>([])
   const [loading, setLoading] = useState(true)
+  const [claiming, setClaiming] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const loadClaimables = async () => {
-      setLoading(true);
-      setError(null); // Reset error
+      setLoading(true)
+      setError(null)
       try {
-        if (!isConnected) {
-          await connectWallet(); // Wait for connection
-          if (!account) return; // Stop if still no account after connecting
+        if (!account) {
+          setError("No account connected.")
+          return
         }
 
-        if (account) {
-          const wills = await getNormalWillsAsBeneficiary();
-          console.log("Fetched wills:", wills);
-          setClaimables(wills || []); // Ensure wills is an array
-        } else {
-          setError("No account connected.");
-        }
-      } catch (err: any) {  // Use "any" type to avoid strict type checking issues
-        console.error("Error fetching claimables:", err);
-        setError(err.message || "Failed to fetch claimables.");
+        const wills = await getNormalWillsAsBeneficiary()
+        console.log("Fetched wills:", wills)
+
+        const detailedClaimables = await Promise.all(
+          wills.map(async (will) => {
+            const willDetails = await getNormalWill(will.owner);
+            console.log(willDetails)
+            return {
+              ...will,
+              description: willDetails ? willDetails.description : "No description",
+              lastActiveTime: Number(willDetails.lastPingTime) * 1000, // Last Ping Time
+              claimWaitTime: Number(willDetails.claimWaitTime),
+              beneficiary: willDetails.beneficiary
+            };
+          })
+        );
+        setClaimables(detailedClaimables || [])
+      } catch (err: any) {
+        console.error("Error fetching claimables:", err)
+        setError(err.message || "Failed to fetch claimables.")
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    loadClaimables();
-
-  }, [isConnected, account, getNormalWillsAsBeneficiary, connectWallet]);
-
-  const handleWillClick = (owner: string) => {
-        // Check if owner is a valid address
-        if (!ethers.isAddress(owner)) {
-            console.error("Invalid address:", owner);
-            setError("Invalid owner address.  Please check your data."); // Correctly sets the error message.
-            return; // prevent navigation
-        }
-        router.push(`/will/${owner}`);
-  }
+    loadClaimables()
+  }, [isConnected, account])
 
   const handleClaim = async (owner: string) => {
-    if (!owner || !ethers.isAddress(owner)) {
-      setError("Invalid owner address.");
-      return;
+    if (!owner || !isAddress(owner)) {
+      setError("Invalid owner address.")
+      return
     }
 
     try {
-      setLoading(true);
-      setError(null);
-      const success = await claimNormalWill(owner);
+      setClaiming(true)
+      setError(null)
+      const success = await claimNormalWill(owner)
       if (success) {
-        // Refresh claimables after successful claim
-        await loadClaimables();
-      } else {
-        // Error is already set within claimNormalWill
+        await loadClaimables()
       }
     } catch (err: any) {
-      console.error("Error during claim:", err);
-      setError(err.message || "Failed to claim.");
+      console.error("Error during claim:", err)
+      setError(err.message || "Failed to claim.")
     } finally {
-      setLoading(false);
+      setClaiming(false)
     }
-  };
-
-  const isClaimable = (createdAt: number, claimWaitTime: number) => {
-    const waitTimeMs = claimWaitTime * 1000
-    return Date.now() - createdAt >= waitTimeMs
   }
 
-  const getTimeRemaining = (createdAt: number, claimWaitTime: number) => {
+  const isClaimable = (lastActiveTime: number, claimWaitTime: number) => {
     const waitTimeMs = claimWaitTime * 1000
-    const endTime = createdAt + waitTimeMs
+    return Date.now() >= lastActiveTime + waitTimeMs
+  }
+
+  const getTimeRemaining = (lastActiveTime: number, claimWaitTime: number) => {
+    const endTime = lastActiveTime + (claimWaitTime * 1000)
+    if (isNaN(endTime)) {
+      return "Invalid Date"
+    }
     return formatDistanceToNow(endTime, { addSuffix: true })
   }
 
   if (!isConnected) {
     return (
-      <div className="container mx-auto p-6 max-w-4xl">
-        <Card>
-          <CardHeader>
-            <CardTitle>Connect Wallet</CardTitle>
-            <CardDescription>Please connect your wallet to view claimables</CardDescription>
+      <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
+        <Card className="w-full max-w-md bg-gray-800 shadow-md rounded-lg">
+          <CardHeader className="text-center">
+            <CardTitle className="text-lg font-semibold">Connect Wallet</CardTitle>
+            <CardDescription className="text-gray-400">Please connect your wallet to view claimables</CardDescription>
           </CardHeader>
-          <CardContent>
-            <Button onClick={connectWallet} disabled={walletLoading}>
+          <CardContent className="p-4 flex justify-center">
+            <Button onClick={connectWallet} disabled={walletLoading} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               {walletLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -123,10 +136,10 @@ export default function Claimables() {
 
   if (loading) {
     return (
-      <div className="container mx-auto p-6 max-w-4xl">
-        <Card>
+      <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
+        <Card className="w-full max-w-md bg-gray-800 shadow-md rounded-lg">
           <CardContent className="flex items-center justify-center p-6">
-            <Loader2 className="h-8 w-8 animate-spin" />
+            <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
           </CardContent>
         </Card>
       </div>
@@ -134,79 +147,92 @@ export default function Claimables() {
   }
 
   return (
-    <div className="container mx-auto p-6 max-w-4xl space-y-6">
-      {(error || walletError) && (
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error || walletError}</AlertDescription>
-        </Alert>
-      )}
+    <div className="min-h-screen bg-gray-900 text-white py-6">
+      <div className="container mx-auto p-6 max-w-4xl space-y-6">
+        {(error || walletError) && (
+          <Alert variant="destructive" className="bg-red-800 text-white rounded-md shadow-md">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{error || walletError}</AlertDescription>
+          </Alert>
+        )}
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-3xl font-display">Your Claimable Assets</CardTitle>
-          <CardDescription>
-            View and manage academic assets designated to you
-          </CardDescription>
-        </CardHeader>
-      </Card>
-
-      {claimables.length === 0 ? (
-        <Card>
-          <CardContent className="p-6 text-center text-muted-foreground">
-            No claimable assets found for your address
-          </CardContent>
+        <Card className="bg-gray-800 shadow-md rounded-lg">
+          <CardHeader className="text-center">
+            <CardTitle className="text-3xl font-display">Your Claimable Assets</CardTitle>
+            <CardDescription className="text-gray-400">
+              View and manage academic assets designated to you
+            </CardDescription>
+          </CardHeader>
         </Card>
-      ) : (
-        <div className="grid gap-6">
-          {claimables.map((claimable, index) => (
-            <Card
-              key={index} // Use index as key since owner might not be unique
-              className="hover:border-primary/50 transition-colors"
-            >
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div>
-                    <CardTitle className="text-xl">Academic Legacy from {claimable.owner}</CardTitle>
-                    <CardDescription className="mt-2">
-                      <div className="flex items-center gap-2">
-                        <ScrollText className="h-4 w-4" />
-                         Assets Description Here {claimable.owner}
 
-                      </div>
-                    </CardDescription>
+        {claimables.length === 0 ? (
+          <Card className="bg-gray-800 shadow-md rounded-lg">
+            <CardContent className="p-6 text-center text-gray-400">
+              No claimable assets found for your address
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid gap-6">
+            {claimables.map((claimable, index) => {
+              const isReadyToClaim = isClaimable(claimable.lastActiveTime, claimable.claimWaitTime)
+              const timeRemaining = getTimeRemaining(claimable.lastActiveTime, claimable.claimWaitTime)
+
+              return (
+                <Card
+                  key={`${claimable.owner}-${index}`}
+                  className="bg-gray-800 shadow-md rounded-lg p-4"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-2">
+                      <CardTitle className="text-xl font-semibold">{claimable.description || "Academic Legacy"}</CardTitle>
+                      <CardDescription className="text-gray-400 flex items-center gap-2">
+                        <FileText className="h-4 w-4" />
+                        Legacy from: {claimable.owner}
+                      </CardDescription>
+                      <CardDescription className="text-gray-400 flex items-center gap-2">
+                        <User className="h-4 w-4" />
+                         Beneficiary: {claimable.beneficiary}
+                      </CardDescription>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-bold text-lg">{claimable.amount} EDU</div>
+                      <CardDescription className="text-gray-400">Token Amount</CardDescription>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <div className="font-bold text-lg">{claimable.amount} EDU</div>
-                    <CardDescription>Token Amount</CardDescription>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                {/* <div className="flex items-center gap-2 text-sm">
-                  <Clock className="h-4 w-4" />
-                  Created {formatDistanceToNow(claimable.createdAt, { addSuffix: true })}
-                </div> */}
-              </CardContent>
-              <CardFooter className="bg-muted/50 flex justify-between">
-                <Button variant="outline" onClick={() => handleWillClick(claimable.owner)}>
-                  View Details
-                </Button>
-                <Button onClick={() => handleClaim(claimable.owner)} disabled={loading}>
-                  {loading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Claiming...
-                    </>
-                  ) : (
-                    'Claim'
-                  )}
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-      )}
+                  <CardContent className="mt-4 text-sm text-gray-400">
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-4 w-4" />
+                      Claim Available: {isReadyToClaim ?
+                        <span className="text-green-500 font-semibold">Now!</span> :
+                        <span className="text-yellow-500 font-semibold">{timeRemaining}</span>
+                      }
+                    </div>
+                  </CardContent>
+                  <CardFooter className="mt-4">
+                    <Button
+                      onClick={() => handleClaim(claimable.owner)}
+                      disabled={claiming || !isReadyToClaim}
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    >
+                      {claiming ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Claiming...
+                        </>
+                      ) : (
+                        <>
+                          <Check className="mr-2 h-4 w-4" />
+                          Claim
+                        </>
+                      )}
+                    </Button>
+                  </CardFooter>
+                </Card>
+              )
+            })}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

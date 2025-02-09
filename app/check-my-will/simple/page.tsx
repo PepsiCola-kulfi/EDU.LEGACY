@@ -17,7 +17,7 @@ interface Will {
   beneficiary: string
   amount: bigint
   lastPingTime: bigint
-  claimWaitTime: bigint // Changed from tenYears to match contract
+  claimWaitTime: bigint
   description: string
   isClaimed: boolean
   creationTime: bigint
@@ -35,11 +35,12 @@ const CheckMyWill = () => {
   const [lastPingTimeAgo, setLastPingTimeAgo] = useState("")
   const [withdrawalAvailable, setWithdrawalAvailable] = useState(false)
 
-  const { account, connectWallet, getNormalWill, ping, depositNormalWill, withdrawNormalWill } = useSmartWill()
+  const { account, connectWallet, getNormalWill, ping, depositNormalWill, withdrawNormalWill, hasCreatedWill } = useSmartWill()
   const router = useRouter()
 
   const fetchWillDetails = useCallback(async () => {
     setLoading(true)
+    setError(null)
     try {
       const details = await getNormalWill(account)
       setWillDetails(details)
@@ -47,6 +48,7 @@ const CheckMyWill = () => {
       checkWithdrawalEligibility(details.creationTime)
     } catch (err) {
       setError("Unable to fetch will details. Please try again.")
+      setWillDetails(null); // Set willDetails to null when no will is found.
     } finally {
       setLoading(false)
     }
@@ -59,12 +61,22 @@ const CheckMyWill = () => {
   }
 
   useEffect(() => {
-    if (!account) {
-      connectWallet()
-    } else {
-      fetchWillDetails()
+    async function checkAndFetchWill() {
+      if (!account) {
+        connectWallet()
+        return;
+      }
+      const hasWill = await hasCreatedWill(account);
+
+      if (!hasWill) {
+        // Redirect to create will page if the user has not created a will
+        router.push("/create-will/simple");
+      } else {
+        fetchWillDetails()
+      }
     }
-  }, [account])
+    checkAndFetchWill();
+  }, [account, connectWallet, fetchWillDetails, hasCreatedWill, router]);
 
   const updateTimeRemaining = useCallback((lastPingTimestamp: bigint, claimWaitTime: bigint) => {
     const updateCounter = () => {
@@ -175,14 +187,8 @@ const CheckMyWill = () => {
             <CardTitle>No Will Found</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="mb-6">Create a digital will to secure your assets for your beneficiaries.</p>
-            <Button
-              onClick={() => router.push("/create-will")}
-              className="w-full flex items-center justify-center gap-2"
-            >
-              <PlusCircle className="w-4 h-4" />
-              Create Will
-            </Button>
+            <p className="mb-6">Redirecting you to create a digital will to secure your assets for your beneficiaries.</p>
+             <Loader2 className="w-12 h-12 animate-spin text-primary" />
           </CardContent>
         </Card>
       </div>
