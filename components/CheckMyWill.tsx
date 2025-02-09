@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Input } from "@/components/ui/input"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { motion, AnimatePresence } from "framer-motion"
+import { DotBackground } from "./animateddots"
 
 interface Will {
   beneficiary: string
@@ -122,8 +123,9 @@ const CheckMyWill = () => {
 
   if (!willDetails) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen p-4">
-        <Card className="w-full max-w-md text-center">
+      <DotBackground>
+      <div className="flex flex-col items-center justify-center bg-transparent min-h-screen p-4">
+        <Card className="w-full max-w-md text-center bg-transparent backdrop-blur-sm">
           <CardHeader>
             <CardTitle>No Will Found</CardTitle>
           </CardHeader>
@@ -139,11 +141,12 @@ const CheckMyWill = () => {
           </CardContent>
         </Card>
       </div>
+      </DotBackground>
     )
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className=" flex items-center justify-center ">
       <AnimatePresence>
         <motion.div
           initial={{ opacity: 0, y: 20 }}

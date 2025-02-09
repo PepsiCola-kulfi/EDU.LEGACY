@@ -20,6 +20,9 @@ import {
 } from "@/components/ui/dialog"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useRouter } from "next/navigation"
+import { AnimatedShinyText } from "./magicui/animated-shiny-text"
+import { IconArrowLeft } from "@tabler/icons-react"
+import { DotBackground } from "./animateddots"
 
 export default function CreateSimpleWill() {
   const router = useRouter()
@@ -190,6 +193,7 @@ export default function CreateSimpleWill() {
 
   if (creatingWill) {
     return (
+      <DotBackground>
       <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center">
         <Card className="w-full max-w-md">
           <CardContent className="pt-6">
@@ -232,13 +236,14 @@ export default function CreateSimpleWill() {
           </CardContent>
         </Card>
       </div>
+      </DotBackground>
     )
   }
 
   if (loading || checkingWill) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Card className="w-full max-w-md">
+        <Card className="w-full max-w-md bg-transparent backdrop-blur-sm">
           <CardContent className="pt-6">
             <div className="flex flex-col items-center space-y-4">
               <Loader2 className="h-10 w-10 animate-spin text-primary stroke-[3px]" />
@@ -260,7 +265,7 @@ export default function CreateSimpleWill() {
   if (hasWill) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Card className="w-full max-w-md">
+        <Card className="w-full max-w-md bg-transparent backdrop-blur-sm">
           <CardContent className="pt-6">
             <div className="flex flex-col items-center space-y-4">
               <Loader2 className="h-10 w-10 animate-spin text-primary stroke-[3px]" />
@@ -282,7 +287,7 @@ export default function CreateSimpleWill() {
     if (!account) return null
 
     return (
-      <Card className="mb-8">
+      <Card className="mb-8 bg-transparent backdrop-blur-sm">
         <CardContent className="pt-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -331,8 +336,15 @@ export default function CreateSimpleWill() {
     return true
   }
 
+  const goHome = () => {
+    router.push("/")
+  }
+
   return (
     <div className="max-w-3xl mx-auto space-y-8 py-8">
+      <Button onClick={goHome} variant="outline" className="absolute top-4 left-4 flex items-center hover:bg-transparent rounded-full bg-transparent backdrop-blur-sm">
+      <AnimatedShinyText className="text-sm">Back to Home</AnimatedShinyText>
+      </Button>
       <WalletInfo />
 
       {(error || validationError) && (
@@ -342,9 +354,9 @@ export default function CreateSimpleWill() {
         </Alert>
       )}
 
-      <Card className="border-primary/20 bg-card/60 backdrop-blur-xl shadow-lg">
+      <Card className="border bg-transparent backdrop-blur-sm shadow-lg">
         <CardHeader>
-          <CardTitle className="text-3xl font-display text-center text-primary">Create Your Academic Legacy</CardTitle>
+          <CardTitle className="text-3xl font-display text-center text-gray-200">Create Your Academic Legacy</CardTitle>
           <CardDescription className="text-center text-muted-foreground">
             Secure your educational assets and intellectual property on Open Campus
           </CardDescription>
@@ -434,12 +446,12 @@ export default function CreateSimpleWill() {
               <DialogTrigger asChild>
                 <Button
                   type="button"
-                  className="w-full bg-primary text-primary-foreground border border-primary/30 rounded-xl px-6 py-6"
+                  className="w-full bg-transparent backdrop-blur-sm hover:dark:bg-white/10 hover:dark:text-black border rounded-full px-6 py-6"
                 >
-                  Review Academic Will
+                  <AnimatedShinyText className="text-lg">Secure Academic Legacy</AnimatedShinyText>
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-2xl">
+              <DialogContent className="max-w-2xl bg-transparent backdrop-blur-xl rounded-2xl">
                 <DialogTitle>Confirm Academic Will Creation</DialogTitle>
                 <DialogDescription>
                   Please review and confirm the following conditions for your educational legacy
@@ -453,7 +465,7 @@ export default function CreateSimpleWill() {
                       {Object.keys(confirmationChecks).length}
                     </span>
                   </div>
-                  <div className="w-full bg-secondary h-2 rounded-full">
+                  <div className="w-full h-2 rounded-full">
                     <div
                       className="bg-primary h-2 rounded-full transition-all duration-300 ease-in-out"
                       style={{
