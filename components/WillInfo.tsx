@@ -107,7 +107,7 @@ export default function WillInfo() {
   return (
     <section className="py-20 relative">
       <div className="container mx-auto px-5">
-        <div className="grid md:grid-cols-2 gap-64 items-center">
+        <div className="grid md:grid-cols-2 gap-96 ">
           {/* Left Column */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
