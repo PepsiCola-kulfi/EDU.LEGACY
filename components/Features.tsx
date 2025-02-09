@@ -104,43 +104,43 @@ const SkeletonOne = () => {
 
   return (
     <motion.div
-    initial="initial"
-    whileHover="animate"
-    className="flex flex-1 w-full h-full min-h-[6rem] dark:bg-dot-white/[0.2] bg-dot-black/[0.2] flex-col space-y-2"
-  >
-    <motion.div
-      variants={variants}
-      className="flex flex-row rounded-full border border-neutral-100 dark:border-white/[0.2] p-2  items-center space-x-2 bg-white dark:bg-black"
+      initial="initial"
+      whileHover="animate"
+      className="flex flex-1 w-full h-full min-h-[6rem] dark:bg-dot-white/[0.2] bg-dot-black/[0.2] flex-col space-y-2"
     >
-      <div className="h-6 w-6 rounded-full bg-gradient-to-r from-pink-500 to-violet-500 flex-shrink-0" />
-      <div className="w-full bg-gray-100 h-4 rounded-full dark:bg-neutral-900" />
+      <motion.div
+        variants={variants}
+        className="flex flex-row rounded-full border border-neutral-100 dark:border-white/[0.2] p-2  items-center space-x-2 bg-white dark:bg-black"
+      >
+        <div className="h-6 w-6 rounded-full bg-gradient-to-r from-pink-500 to-violet-500 flex-shrink-0" />
+        <div className="w-full bg-gray-100 h-4 rounded-full dark:bg-neutral-900" />
+      </motion.div>
+      <motion.div
+        variants={variantsSecond}
+        className="flex flex-row rounded-full border border-neutral-100 dark:border-white/[0.2] p-2 items-center space-x-2 w-3/4 ml-auto bg-white dark:bg-black"
+      >
+        <div className="w-full bg-gray-100 h-4 rounded-full dark:bg-neutral-900" />
+        <div className="h-6 w-6 rounded-full bg-gradient-to-r from-pink-500 to-violet-500 flex-shrink-0" />
+      </motion.div>
+      <motion.div
+        variants={variants}
+        className="flex flex-row rounded-full border border-neutral-100 dark:border-white/[0.2] p-2 items-center space-x-2 bg-white dark:bg-black"
+      >
+        <div className="h-6 w-6 rounded-full bg-gradient-to-r from-pink-500 to-violet-500 flex-shrink-0" />
+        <div className="w-full bg-gray-100 h-4 rounded-full dark:bg-neutral-900" />
+      </motion.div>
     </motion.div>
-    <motion.div
-      variants={variantsSecond}
-      className="flex flex-row rounded-full border border-neutral-100 dark:border-white/[0.2] p-2 items-center space-x-2 w-3/4 ml-auto bg-white dark:bg-black"
-    >
-      <div className="w-full bg-gray-100 h-4 rounded-full dark:bg-neutral-900" />
-      <div className="h-6 w-6 rounded-full bg-gradient-to-r from-pink-500 to-violet-500 flex-shrink-0" />
-    </motion.div>
-    <motion.div
-      variants={variants}
-      className="flex flex-row rounded-full border border-neutral-100 dark:border-white/[0.2] p-2 items-center space-x-2 bg-white dark:bg-black"
-    >
-      <div className="h-6 w-6 rounded-full bg-gradient-to-r from-pink-500 to-violet-500 flex-shrink-0" />
-      <div className="w-full bg-gray-100 h-4 rounded-full dark:bg-neutral-900" />
-    </motion.div>
-  </motion.div>
-);
+  );
 };
 
 const SkeletonTwo = () => (
   // Previously rendered a Lottie animation; now replaced with a placeholder.
   <Image
-    src="https://i.pinimg.com/736x/e3/23/ba/e323ba68e40ab4245b2a5a1d2578d3a0.jpg"
+    src="https://i.pinimg.com/originals/8f/2e/a2/8f2ea20af094616662530c48c4f6d561.gif"
     alt="avatar"
     height="2000"
     width="2000"
-    className="max-h-44 w-full"      
+    className="max-h-44 w-full"
   />
 );
 
@@ -150,35 +150,28 @@ const SkeletonThree = () => (
     alt="avatar"
     height="2000"
     width="2000"
-    className="max-h-44 w-full"      
+    className="max-h-44 w-full"
   />
 );
 
 const SkeletonFour = () => (
   <Image
-    src="https://i.pinimg.com/736x/90/0d/e7/900de7fdbe43aa2a8092d2a6245144fe.jpg"
+    src="https://i.pinimg.com/originals/0e/1c/a4/0e1ca4afba2b94a1d0391324c60d2a25.gif"
     alt="avatar"
     height="5000"
     width="2000"
-    className="max-h-44 w-full"      
+    className="max-h-44 w-full"
   />
 );
 
 const SkeletonFive = () => (
-  <div className="">
-    <div className="w-full h-full relative max-w-xs">
-      <div className="absolute inset-0 h-full w-full bg-gradient-to-r from-purple-500 to-blue-500 transform scale-[0.80] bg-red-500 rounded-full blur-3xl" />
-      <div className="relative shadow-xl bg-black border border-gray-800 px-4 py-8 h-full overflow-hidden rounded-2xl flex flex-col justify-end items-start">
-        <h1 className="font-bold text-xl text-white mb-12 relative z-50">
-          Meteors because they&apos;re cool
-        </h1>
-        {/* Removed the Meteors component and replaced it with a placeholder */}
-        <div className="w-full text-center text-white">
-          Meteors Animation Placeholder
-        </div>
-      </div>
-    </div>
-  </div>
+  <Image
+  src="https://i.pinimg.com/originals/e0/e2/3d/e0e23d98d1e94c1a2b8d408d7bada31f.gif"
+  alt="avatar"
+  height="5000"
+  width="2000"
+  className="max-h-44 w-full"      
+/>
 );
 
 const items = [
@@ -191,7 +184,7 @@ const items = [
   },
   {
     title: "Low-Cost Operations",
-    description:   "Benefit from EDU' minimal transaction fees for cost-effective legacy management.",
+    description: "Benefit from EDU' minimal transaction fees for cost-effective legacy management.",
     header: <SkeletonTwo />,
     className: "md:col-span-1 p-6",
     icon: <BookOpen className="h-5 w-5 text-neutral-600 dark:text-neutral-300" />,

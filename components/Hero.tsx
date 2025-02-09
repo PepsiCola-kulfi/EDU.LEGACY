@@ -5,34 +5,35 @@ import { cn } from "@/lib/utils"
 import { AnimatedShinyText } from "@/components/magicui/animated-shiny-text"
 import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, ChevronRight } from "lucide-react"
 import { InfoCircledIcon } from "@radix-ui/react-icons"; // Import the info icon
 import Link from "next/link"
+import { AnimatedGradientText } from "./magicui/animated-gradient-text"
 
 export default function Hero() {
   return (
     <div className="relative min-h-screen w-full overflow-hidden from-black to-black flex flex-col items-center justify-center text-center px-4 py-28">
-    
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="relative z-10 max-w-5xl mx-auto space-y-8"
-        >
-          <div className="flex justify-center">
-            <motion.div
-              className={cn(
-                "group rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-base text-white transition-all ease-in hover:cursor-pointer hover:bg-white/10"
-              )}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <AnimatedShinyText className="inline-flex items-center justify-center px-6 py-2 transition ease-out">
-                <span className="font-semibold">✨ Secure legacy planning</span>
-                <ArrowRightIcon className="ml-2 size-4 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
-              </AnimatedShinyText>
-            </motion.div>
-          </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="relative z-10 max-w-5xl mx-auto space-y-8"
+      >
+        <div className="flex justify-center">
+          <motion.div
+            className={cn(
+              "group rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-base text-white transition-all ease-in hover:cursor-pointer hover:bg-white/10"
+            )}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <AnimatedShinyText className="inline-flex items-center justify-center px-6 py-2 transition ease-out ">
+              <span className="font-semibold">✨ Secure legacy planning</span>
+              <ArrowRightIcon className="ml-2 size-4 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
+            </AnimatedShinyText>
+          </motion.div>
+        </div>
 
         <motion.h1
           className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6"
@@ -62,36 +63,42 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.8 }}
         >
-          <Link href={"/create-will"}>   <Button
-            size="lg"
-            className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-8 py-6 text-lg font-semibold transition-all duration-300 ease-in-out hover:shadow-lg hover:shadow-primary/50"
-          >
-            Start Your Will
-          </Button></Link>
-        <Link href={"/claimables"}><Button
-            size="lg"
-            variant="outline"
-            className="rounded-full px-8 py-6 text-lg font-semibold border-white/20 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 ease-in-out"
-          >
-            Check My Claimables 
-          </Button></Link>
-          
+
+          <button className="px-8 py-2 rounded-full bg-gradient-to-b from-blue-500 to-blue-600 text-white focus:ring-2 focus:ring-blue-400 hover:shadow-xl transition duration-200">
+            <Link href={"/create-will"}>  Start Your Will</Link>
+          </button>
+
+          <button className="relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
+            <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+            <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl">
+              <Link href={"/claimables"}>   Check My Claimables</Link>
+            </span>
+          </button>
+
         </motion.div>
 
         {/* Testnet notice */}
         <motion.div
-          className="mt-8 flex items-center justify-center text-sm text-yellow-400 bg-yellow-900/30 rounded-md px-4 py-2"
+          className="mt-8 flex items-center justify-center text-sm  rounded-md px-4 py-2"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 0.8 }}
         >
-          <InfoCircledIcon className="mr-2 h-4 w-4" />
-          
-   
-          <span>
-            <strong className="font-semibold">Heads up! 🚀</strong> We're currently live on the testnet. Some features are still being fine-tuned, and we'd love your feedback! Join us in testing and grab some free <Link href="https://www.hackquest.io/faucets/656476" className="underline hover:text-yellow-400">EDU Tokens</Link> to get started.
-          </span>
-          
+
+
+
+          <AnimatedGradientText className="rounded-3xl">
+            {/* <InfoCircledIcon className="mr-2 h-4 w-4" />{" "} */}
+            <span
+              className={cn(
+                `inline animate-gradient bg-gradient-to-r from-[#ffaa40] via-[#9c40ff] to-[#ffaa40] bg-[length:var(--bg-size)_100%] bg-clip-text text-transparent`,
+              )}
+            >
+              We're live on the testnet! Some features are still being refined—your feedback is welcome. <br /> Join us in testing and grab some free <Link href="https://www.hackquest.io/faucets/656476" >EDU Tokens</Link> to get started.
+            </span>
+            <ChevronRight className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
+          </AnimatedGradientText>
+
         </motion.div>
       </motion.div>
 
