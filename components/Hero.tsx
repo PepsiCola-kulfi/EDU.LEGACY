@@ -23,13 +23,13 @@ export default function Hero() {
         <div className="flex justify-center">
           <motion.div
             className={cn(
-              "group rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-base text-white transition-all ease-in hover:cursor-pointer hover:bg-white/10"
+              "group rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-white transition-all ease-in hover:cursor-pointer hover:bg-white/10"
             )}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             <AnimatedShinyText className="inline-flex items-center justify-center px-6 py-2 transition ease-out ">
-              <span className="font-semibold">✨ Secure legacy planning</span>
+              <span className="font-poppins">✨ Secure legacy planning</span>
               <ArrowRightIcon className="ml-2 size-4 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
             </AnimatedShinyText>
           </motion.div>
@@ -41,7 +41,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.8 }}
         >
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-400">
+          <span className="bg-clip-text font-poppins ">
             Secure Your Legacy
             <br />
             On EDU Chain

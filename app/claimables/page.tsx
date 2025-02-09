@@ -9,6 +9,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { ScrollText, AlertCircle, Clock, Check, Lock, Loader2, FileText, Coins, User } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { isAddress, ethers } from 'ethers'
+import { DotBackground } from '@/components/animateddots'
 
 interface Claimable {
   owner: string;
@@ -111,14 +112,15 @@ export default function Claimables() {
 
   if (!isConnected) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
-        <Card className="w-full max-w-md bg-gray-800 shadow-md rounded-lg">
+      <DotBackground>
+      <div className="min-h-screen flex items-center justify-center text-white">
+        <Card className="w-full max-w-md bg-transparent backdrop-blur-sm shadow-md rounded-2xl">
           <CardHeader className="text-center">
             <CardTitle className="text-lg font-semibold">Connect Wallet</CardTitle>
             <CardDescription className="text-gray-400">Please connect your wallet to view claimables</CardDescription>
           </CardHeader>
           <CardContent className="p-4 flex justify-center">
-            <Button onClick={connectWallet} disabled={walletLoading} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <Button onClick={connectWallet} disabled={walletLoading} className="text-white bg-black border dark:text-gray-100 hover:bg-white hover:dark:text-black dark:hover:bg-white font-bold py-2 px-4 rounded">
               {walletLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -131,23 +133,27 @@ export default function Claimables() {
           </CardContent>
         </Card>
       </div>
+      </DotBackground>
     )
   }
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
-        <Card className="w-full max-w-md bg-gray-800 shadow-md rounded-lg">
+      <DotBackground>
+      <div className="min-h-screen flex items-center justify-center">
+        <Card className="w-full max-w-md bg-transparent backdrop-blur-sm shadow-md rounded-lg">
           <CardContent className="flex items-center justify-center p-6">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+            <Loader2 className="h-8 w-8 animate-spin text-white" />
           </CardContent>
         </Card>
       </div>
+      </DotBackground>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white py-6">
+    <DotBackground>
+    <div className="min-h-screen text-white py-6">
       <div className="container mx-auto p-6 max-w-4xl space-y-6">
         {(error || walletError) && (
           <Alert variant="destructive" className="bg-red-800 text-white rounded-md shadow-md">
@@ -156,7 +162,7 @@ export default function Claimables() {
           </Alert>
         )}
 
-        <Card className="bg-gray-800 shadow-md rounded-lg">
+        <Card className="bg-transparent backdrop-blur-sm shadow-md rounded-2xl">
           <CardHeader className="text-center">
             <CardTitle className="text-3xl font-display">Your Claimable Assets</CardTitle>
             <CardDescription className="text-gray-400">
@@ -166,7 +172,7 @@ export default function Claimables() {
         </Card>
 
         {claimables.length === 0 ? (
-          <Card className="bg-gray-800 shadow-md rounded-lg">
+          <Card className="bg-transparent border border-transparent shadow-md rounded-lg">
             <CardContent className="p-6 text-center text-gray-400">
               No claimable assets found for your address
             </CardContent>
@@ -234,5 +240,6 @@ export default function Claimables() {
         )}
       </div>
     </div>
+    </DotBackground>
   )
 }
