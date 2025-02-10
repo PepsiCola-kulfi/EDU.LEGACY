@@ -109,12 +109,18 @@ export default function CreateSimpleWill() {
       setWaitingForSignature(true)
       setTransactionHash("") // Reset transaction hash before starting
 
+      // Add balance check
+      const requiredAmount = Number(formData.amount)
+      if (Number(balance) < requiredAmount) {
+        throw new Error(`Insufficient balance. You need ${requiredAmount} EDU but have ${Number(balance).toFixed(4)} EDU`)
+      }
+
       const success = await createNormalWill(
         formData.beneficiary,
         formData.assets,
         formData.amount,
         formData.claimWaitTime,
-        (hash) => { // Provide the callback
+        (hash) => {
           setTransactionHash(hash)
           setWaitingForSignature(false)
         }
@@ -124,16 +130,17 @@ export default function CreateSimpleWill() {
         setFormData({ beneficiary: "", assets: "", amount: "", claimWaitTime: "" })
         setOpenDialog(false)
         setConfirmationChecks(Object.keys(confirmationChecks).reduce((acc, key) => ({ ...acc, [key]: false }), {}))
+        // Maybe add a success notification here
       }
     } catch (err) {
       console.error("Error submitting will:", err)
-      // Handle the error state appropriately
+      setError(err.message || "Failed to create will. Please try again.")
     } finally {
       setCreatingWill(false)
       setWaitingForSignature(false)
-      // Transaction hash may or may not be available - leave it for now
     }
-  }
+}
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -399,7 +406,7 @@ export default function CreateSimpleWill() {
                 {formData.amount && (
                   <div className="mt-2 text-sm text-muted-foreground flex items-center gap-2">
                     <Info className="w-4 h-4" />
-                    Final deposit: {(Number(formData.amount) * 0.98).toFixed(6)} EDU (2% supports Open Campus)
+                    Final deposit: {(Number(formData.amount) * 0.98).toFixed(6)} EDU (2% supports EDU Legacy Scholarship)
                   </div>
                 )}
               </div>
@@ -420,26 +427,42 @@ export default function CreateSimpleWill() {
                 <div className="mt-1 text-sm text-muted-foreground">{formData.assets.length}/50 characters</div>
               </div>
 
+                {/* Custom Claim Wait Time Section */}
               <div className="relative">
                 <Label htmlFor="claimWaitTime" className="text-lg text-foreground flex items-center gap-2">
-                  <Clock className="w-4 h-4" /> Claim Wait Time (seconds)
+                  <Clock className="w-4 h-4" /> Custom Claim Wait Time (only on Testnet)
                 </Label>
-                <Input
-                  type="number"
-                  id="claimWaitTime"
-                  name="claimWaitTime"
-                  value={formData.claimWaitTime}
-                  onChange={handleChange}
-                  className="bg-input border-input text-foreground focus:ring-2 focus:ring-ring focus:border-ring placeholder:text-muted-foreground mt-2"
-                  placeholder="60"
-                  min="60"
-                  required
-                />
-                <div className="mt-2 text-sm text-muted-foreground flex items-center gap-2">
-                  <Info className="w-4 h-4" />
-                  Minimum wait time: 60 seconds
+                <div className="mt-2 p-4 rounded-lg bg-secondary/20 border border-secondary/30">
+                  <Input
+                    type="number"
+                    id="claimWaitTime"
+                    name="claimWaitTime"
+                    value={formData.claimWaitTime}
+                    onChange={handleChange}
+                    className="bg-input border-input text-foreground focus:ring-2 focus:ring-ring focus:border-ring placeholder:text-muted-foreground"
+                    placeholder="60"
+                    min="60"
+                    required
+                  />
+                  <div className="mt-3 space-y-2">
+                    <div className="flex items-start gap-2">
+                      <Info className="w-4 h-4 mt-1 text-primary" />
+                      <div className="text-sm text-muted-foreground">
+                        <p className="font-medium text-primary mb-1">Testnet Configuration</p>
+                        <p>For testing purposes, you can set a custom wait time (minimum 60 seconds). This allows you to experience the full functionality without waiting for extended periods.</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-2 mt-2">
+                      <Clock className="w-4 h-4 mt-1 text-primary" />
+                      <div className="text-sm text-muted-foreground">
+                        <p className="font-medium text-primary mb-1">Mainnet Behavior</p>
+                        <p>On mainnet, the wait time is automatically set to 10 years to ensure proper academic legacy protection. We value your feedback for potential improvements to this timeframe.</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
+              {/* End Custom Claim Wait Time Section */}
             </div>
 
             <Dialog open={openDialog} onOpenChange={setOpenDialog}>

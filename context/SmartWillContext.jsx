@@ -117,7 +117,7 @@ export function SmartWillProvider({ children }) {
   }
 
   // Create normal will
-  async function createNormalWill(beneficiary, description, amount, claimWaitTime) {
+  async function createNormalWill(beneficiary, description, amount, claimWaitTime, onHashGenerated) {
     try {
       setLoading(true)
       setError(null)
@@ -137,6 +137,11 @@ export function SmartWillProvider({ children }) {
 
       const value = ethers.parseEther(amount.toString())
       const tx = await contract.createNormalWill(beneficiary, description, claimWaitTime, { value })
+      
+      // Call the callback with the transaction hash
+      if (onHashGenerated) {
+        onHashGenerated(tx.hash)
+      }
 
       await tx.wait()
       return true
@@ -147,7 +152,8 @@ export function SmartWillProvider({ children }) {
     } finally {
       setLoading(false)
     }
-  }
+}
+
 
   // Get normal will by owner address
   async function getNormalWill(ownerAddress) {
