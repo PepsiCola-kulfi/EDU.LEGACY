@@ -15,7 +15,7 @@ export default function Dashboard() {
               Dashboard
             </h2>
             <p className="text-gray-400 mb-8">
-              Monitor your will's status, track milestone completions, and manage beneficiary distributions through our
+              Monitor your will&apos;s status, track milestone completions, and manage beneficiary distributions through our
               intuitive dashboard. Make updates in real-time and ensure your wishes are executed exactly as planned.
             </p>
             <button className="bg-white/10 hover:bg-white/20 px-6 py-3 rounded-full text-sm transition-colors">

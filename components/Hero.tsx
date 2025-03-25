@@ -54,7 +54,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.8 }}
         >
-           Create smart wills, set milestone-based distributions, and ensure your legacy lives on through EDU Chain. Fast, secure, and eco-friendly.
+          Create smart wills, set milestone-based distributions, and ensure your legacy lives on through EDU Chain. Fast, secure, and eco-friendly.
         </motion.p>
 
         <motion.div
@@ -94,7 +94,8 @@ export default function Hero() {
                 `inline animate-gradient bg-gradient-to-r from-[#ffaa40] via-[#9c40ff] to-[#ffaa40] bg-[length:var(--bg-size)_100%] bg-clip-text text-transparent`,
               )}
             >
-              We're live on the testnet! Some features are still being refined—your feedback is welcome. <br /> Join us in testing and grab some free <Link href="https://www.hackquest.io/faucets/656476" >EDU Tokens</Link> to get started.
+              We&apos;re live on the testnet! Some features are still being refined—your feedback is welcome. <br />
+              Join us in testing and grab some free <Link href="https://www.hackquest.io/faucets/656476">EDU Tokens</Link> to get started.
             </span>
             <ChevronRight className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
           </AnimatedGradientText>
