@@ -82,7 +82,7 @@ const CreateWill = () => {
                   animate="visible"
                 >
                   <FileSignature className="mr-3 mt-1 text-green-400 flex-shrink-0" />
-                  <span>Immutable Will: Assignments cannot be altered after creation, ensuring the testator's intent is permanent.</span>
+                  <span>Immutable Will: Assignments cannot be altered after creation, ensuring the testator&apos;s intent is permanent.</span>
                 </motion.li>
                 <motion.li
                   className="flex items-start"
