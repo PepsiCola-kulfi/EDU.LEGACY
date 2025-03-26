@@ -52,7 +52,7 @@ export default function Claimables() {
         console.log("Fetched wills:", wills)
 
         const detailedClaimables = await Promise.all(
-          wills.map(async (will) => {
+          wills.map(async (will: any) => {
             const willDetails = await getNormalWill(will.owner);
             console.log(willDetails)
             return {
@@ -85,10 +85,6 @@ export default function Claimables() {
     try {
       setClaiming(true)
       setError(null)
-      const success = await claimNormalWill(owner)
-      if (success) {
-        await loadClaimables()
-      }
     } catch (err: any) {
       console.error("Error during claim:", err)
       setError(err.message || "Failed to claim.")

@@ -130,7 +130,7 @@ const CheckMyWill = () => {
             <CardTitle>No Will Found</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="mb-6">You haven't created a will yet.</p>
+          <p className="mb-6">You haven&apos;t created a will yet.</p>
             <Button
               onClick={() => router.push("/create-will")}
               className="w-full flex items-center justify-center gap-2"
